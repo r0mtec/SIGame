@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SignGame
 {
@@ -17,7 +18,11 @@ namespace SignGame
         /// Поле-обьект для работы с пользователем
         /// </summary>
         private ManageUser manageUser;
-
+        /// <summary>
+        /// Список со всеми подключенными клиентами
+        /// </summary>
+        private List<TcpClient> connectedClients = new List<TcpClient>();
+        private List<User> UserConnected = new List<User>();
         /// <summary>
         /// Инициализация формы и поля-объекта
         /// </summary>
@@ -29,7 +34,7 @@ namespace SignGame
         }
 
         /// <summary>
-        /// При нажатии на кнопку изменяется имя Labal
+        /// При нажатие на кнопку создается host, запускается асинхронный метод и запускается ожитание ответа
         /// </summary>
         private async void host_but_Click(object sender, EventArgs e)
         {
@@ -42,6 +47,8 @@ namespace SignGame
             var tcpListener = new TcpListener(tcpEndPoint);
             tcpListener.Start();
 
+
+
             ///создание Label
             Label newLabel = new Label();
 
@@ -49,111 +56,226 @@ namespace SignGame
             newLabel.Name = "IPlabel";
 
             // Задаем координаты и размер Label
-            newLabel.Location = new Point(100, 50);
+            newLabel.Location = new Point(330, 100);
             newLabel.Size = new Size(200, 20);
 
             // Задаем текст для Label
-            newLabel.Text = manageUser.User.Ip;
+            newLabel.Text = "Ваш айпи - " + manageUser.User.Ip;
 
             // Добавляем Label на форму
             this.Controls.Add(newLabel);
-
             ///
 
 
-
-
+            // Цикл для приема новых "клиентов"
             while (true)
             {
+                // Ожидаем нового подключения от клиента
                 var tcpClient = await tcpListener.AcceptTcpClientAsync();
-                await Task.Run(() => HandleClient(tcpClient));
+
+                // Добавляем нового клиента в список подключенных клиентов
+                connectedClients.Add(tcpClient);
+
+                // Запускаем асинхронный метод для обработки каждого клиента
+                _ = Task.Run(() => HandleClient(tcpClient));
             }
         }
 
+        /// <summary>
+        /// Асинхронный метод для работы с пользователями
+        /// </summary>
         private async void HandleClient(TcpClient tcpClient)
         {
+
+            // Получаем поток для обмена данными с клиентом
             var stream = tcpClient.GetStream();
 
+            // Буфер для чтения данных
             var buffer = new byte[256];
             var size = 0;
-            var data = new StringBuilder();
 
-            try
+            while (true)
             {
-                do
+                // Асинхронное чтение данных от сервера
+                try 
                 {
                     size = await stream.ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch     
+                {
+                    connectedClients.Remove(tcpClient);
+                    tcpClient.Close();
+                }
+                // Строка для хранения данных от клиента
+                var data = new StringBuilder();
+
+                try
+                {
+                    // Читаем данные из потока асинхронно
                     data.Append(Encoding.UTF8.GetString(buffer, 0, size));
 
-                } while (stream.DataAvailable);
+                    // Десериализуем полученные данные в объект User
+                    string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size);
+                    User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
+
+                    // Поиск пользователя в списке
+                    int index = UserConnected.FindIndex(client => client.Ip == AnwerUser.Ip);
+
+                    if (index != -1)
+                    {
+                        // Элемент найден, изменяем его
+                        UserConnected[index] = AnwerUser;
+                    }
+                    else UserConnected.Add(AnwerUser);
+
+                    refresh_label();
 
 
-                Vivod.Invoke((MethodInvoker)delegate
+                    // Сериализуем информацию о текущем пользователе и отправляем обратно клиенту
+                    var message = "Успех!";
+
+                    var dataM = Encoding.UTF8.GetBytes(message);
+
+                    await stream.WriteAsync(dataM);
+                }
+                catch (Exception ex)
                 {
-                    Vivod.Text = data.ToString();
-                });
-
-                string json = JsonConvert.SerializeObject(manageUser.User);
-
-                var response = Encoding.UTF8.GetBytes(json);
-                await stream.WriteAsync(response, 0, response.Length);
+                    // Обработка и вывод ошибок в текстовое поле
+                    Vivod.Text = ex.ToString();
+                }
             }
-            catch (Exception ex)
+        }
+        private void refresh_label()
+        {
+            string s = "";
+            foreach (User client in UserConnected)
             {
-                Vivod.Text = ex.ToString();
+                s += client.Name + " - " + client.Scores + "\n";
             }
-            finally
+            // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
+            Vivod.Invoke((MethodInvoker)delegate
             {
-                tcpClient.Close();
+                // Отображаем информацию о клиенте на форме
+                Vivod.Text = s;      
+            });
+        }
+
+        /// <summary>
+        /// При нажатии на кнопку вызывается метод BroadcastMessage
+        /// </summary>
+        private async void buttonSendMessage_Click(object sender, EventArgs e)
+        {
+            if (connectedClients.Count == 0) return;
+            await BroadcastMessage("Прибавить всем баллы");
+        }
+        /// <summary>
+        /// Отправка всем клиетам сообщения
+        /// </summary>
+        /// <param name="message">cjj,otybt</param>
+        private async Task BroadcastMessage(string message)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+
+            foreach (TcpClient client in connectedClients)
+            {
+                try
+                {
+                    await client.GetStream().WriteAsync(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    Vivod.Text = "Ошибка при отправке данных";
+                }
             }
+            refresh_label();
         }
 
         private async void join_but_Click(object sender, EventArgs e)
         {
             if (manageUser == null || manageUser.User == null) return;
-            if(IpTextBox.Text == "") 
+
+            // Проверяем, что поле ввода IP-адреса не пустое
+            if (IpTextBox.Text == "")
             {
-                Vivod.Text = "Вы забыли ввести ip";
+                Vivod.Text = "Вы забыли ввести IP-адрес";
                 return;
             }
+
+            // Получаем IP-адрес из текстового поля
             string ip = IpTextBox.Text;
             const int port = 8080;
+
+            // Создаем конечную точку для подключения (по умолчанию используем IP пользователя из manageUser)
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(manageUser.User.Ip), port);
+
             try
             {
+                // Попытка использовать введенный IP-адрес, если он корректен
                 tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                Vivod.Text = "Вы ввели неправильный айпи";
+                // Выводим сообщение об ошибке при некорректном вводе IP-адреса
+                Vivod.Text = "Вы ввели неправильный IP-адрес";
                 return;
             }
 
-            var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            // Создаем новый сокет для обмена данными
+            var tcpSocket = new TcpClient();
 
-            var message = manageUser.User.Name;
+            // Сериализуем объект пользователя в формат JSON
+            string json = JsonConvert.SerializeObject(manageUser.User);
 
-            var data = Encoding.UTF8.GetBytes(message);
+            // Преобразуем JSON-строку в массив байт
+            var message = Encoding.UTF8.GetBytes(json);
 
+            // Асинхронное подключение к серверу
             await tcpSocket.ConnectAsync(tcpEndPoint);
-            await tcpSocket.SendAsync(new ArraySegment<byte>(data), SocketFlags.None);
 
+            // Отправка данных на сервер
+            await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
+
+            // Буфер для приема данных от сервера
             var buffer = new byte[256];
             var size = 0;
-            var answer = new StringBuilder();
 
-            do
+            // Цикл для ожидания новых сообщений от сервера
+            while (true)
             {
-                size = await tcpSocket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
-                answer.Append(Encoding.UTF8.GetString(buffer, 0, size));
+                // Асинхронное чтение данных от сервера
+                try
+                {
+                    size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch 
+                {
+                    Vivod.Text = "Сервер отключился";
+                    break;
+                }
 
-            } while (tcpSocket.Available > 0);
+                if (size == 0) break;
+      
 
-            string jsonReceived = Encoding.UTF8.GetString(buffer, 0, size);
-            User receivedUser = JsonConvert.DeserializeObject<User>(jsonReceived);
+                // Обработка полученных данных, например, вывод на форму
+                string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
+                if(receivedMessage != "Прибавить всем баллы") 
+                {
+                    Vivod.Invoke((MethodInvoker)delegate
+                    {
+                        Vivod.Text = receivedMessage;
+                    });
+                }
+                else 
+                {
+                    manageUser.User.ChangeScores(5);
+                    Vivod.Text = "Успешно + 5 очков";
+                    json = JsonConvert.SerializeObject(manageUser.User);
+                    message = Encoding.UTF8.GetBytes(json);
+                    await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
+                }
+            }
 
-            Vivod.Text = receivedUser.Name;
-            tcpSocket.Shutdown(SocketShutdown.Both);
+            // Завершаем соединение и закрываем сокет
             tcpSocket.Close();
         }
     }
