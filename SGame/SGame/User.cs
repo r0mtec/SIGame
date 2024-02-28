@@ -23,7 +23,22 @@ public class User
     {
         Name = name;
         Scores = scores;
-        Ip = Dns.GetHostAddresses(Dns.GetHostName())[4].ToString();
+        Ip = GetLocalIpAddress();
+    }
+
+    private string GetLocalIpAddress()
+    {
+        string hostName = Dns.GetHostName();
+        IPHostEntry ipEntry = Dns.GetHostEntry(hostName);
+
+        foreach (IPAddress ipAddress in ipEntry.AddressList)
+        {
+            if (ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                return ipAddress.ToString();
+            }
+        }
+        return null;
     }
     /// <summary>
     /// Изменение очков у пользователя
