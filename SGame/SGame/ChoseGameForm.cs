@@ -86,6 +86,7 @@ namespace SignGame
         /// </summary>
         private async void HandleClient(TcpClient tcpClient)
         {
+
             // Получаем поток для обмена данными с клиентом
             var stream = tcpClient.GetStream();
 
@@ -93,57 +94,59 @@ namespace SignGame
             var buffer = new byte[256];
             var size = 0;
 
-            // Строка для хранения данных от клиента
-            var data = new StringBuilder();
-
-            try
+            while (true)
             {
-                // Читаем данные из потока асинхронно
-                do
+                // Асинхронное чтение данных от сервера
+                size = await stream.ReadAsync(buffer, 0, buffer.Length);
+                // Строка для хранения данных от клиента
+                var data = new StringBuilder();
+
+                try
                 {
-                    size = await stream.ReadAsync(buffer, 0, buffer.Length);
+                    // Читаем данные из потока асинхронно
                     data.Append(Encoding.UTF8.GetString(buffer, 0, size));
 
-                } while (stream.DataAvailable);
+                    // Десериализуем полученные данные в объект User
+                    string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size);
+                    User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
 
-                // Десериализуем полученные данные в объект User
-                string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size); 
-                User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
+                    // Поиск пользователя в списке
+                    int index = UserConnected.FindIndex(client => client.Ip == AnwerUser.Ip);
 
-                // Поиск пользователя в списке
-                User existingUser = UserConnected.Find(client => client.Ip == AnwerUser.Ip);
-                if (existingUser != null)
-                {
-                    existingUser = AnwerUser;
+                    if (index != -1)
+                    {
+                        // Элемент найден, изменяем его
+                        UserConnected[index] = AnwerUser;
+                    }
+                    else UserConnected.Add(AnwerUser);
+
+                    refresh_label();
+
+
+                    // Сериализуем информацию о текущем пользователе и отправляем обратно клиенту
+                    var message = "Успех!";
+
+                    var dataM = Encoding.UTF8.GetBytes(message);
+
+                    await stream.WriteAsync(dataM);
                 }
-                else UserConnected.Add(AnwerUser); 
-                refresh_label();
-                
-
-                // Сериализуем информацию о текущем пользователе и отправляем обратно клиенту
-                var message = "Успех!";
-
-                var dataM = Encoding.UTF8.GetBytes(message);
-
-                await stream.WriteAsync(dataM);
+                catch (Exception ex)
+                {
+                    // Обработка и вывод ошибок в текстовое поле
+                    Vivod.Text = ex.ToString();
+                }
             }
-            catch (Exception ex)
-            {
-                // Обработка и вывод ошибок в текстовое поле
-                Vivod.Text = ex.ToString();
-            }
-            
         }
         private void refresh_label()
         {
+            string s = "";
+            foreach (User client in UserConnected)
+            {
+                s += client.Name + " - " + client.Scores + "\n";
+            }
             // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
             Vivod.Invoke((MethodInvoker)delegate
             {
-                string s = "";
-                foreach (User client in UserConnected)
-                {
-                    s += client.Name + " - " + client.Scores + "\n";
-                }
                 // Отображаем информацию о клиенте на форме
                 Vivod.Text = s;      
             });
@@ -232,8 +235,17 @@ namespace SignGame
             while (true)
             {
                 // Асинхронное чтение данных от сервера
-                size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
-                if(size == 0) break;
+                try
+                {
+                    size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch 
+                {
+                    Vivod.Text = "Сервер отключился";
+                    break;
+                }
+
+                if (size == 0) break;
       
 
                 // Обработка полученных данных, например, вывод на форму
@@ -248,6 +260,7 @@ namespace SignGame
                 else 
                 {
                     manageUser.User.ChangeScores(5);
+                    Vivod.Text = "Успешно + 5 очков";
                     json = JsonConvert.SerializeObject(manageUser.User);
                     message = Encoding.UTF8.GetBytes(json);
                     await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
