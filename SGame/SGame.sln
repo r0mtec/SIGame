@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignGame", "SignGame\SignGame.csproj", "{4728309A-3C8B-403C-8904-3B791B594747}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGame", "SGame\SGame.csproj", "{A328612E-07DB-4BAE-BDAE-E69DBBCEAD1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4728309A-3C8B-403C-8904-3B791B594747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4728309A-3C8B-403C-8904-3B791B594747}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4728309A-3C8B-403C-8904-3B791B594747}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4728309A-3C8B-403C-8904-3B791B594747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A328612E-07DB-4BAE-BDAE-E69DBBCEAD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A328612E-07DB-4BAE-BDAE-E69DBBCEAD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A328612E-07DB-4BAE-BDAE-E69DBBCEAD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A328612E-07DB-4BAE-BDAE-E69DBBCEAD1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6918952D-325D-4723-8B8C-DB88B047EE7E}
+		SolutionGuid = {6F03CF0D-6D39-4347-8545-AE9F6DA50FF8}
 	EndGlobalSection
 EndGlobal
