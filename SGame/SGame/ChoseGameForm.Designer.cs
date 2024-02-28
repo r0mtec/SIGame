@@ -32,11 +32,12 @@
             join_but = new Button();
             Vivod = new Label();
             IpTextBox = new TextBox();
+            buttonSendMessage = new Button();
             SuspendLayout();
             // 
             // host_but
             // 
-            host_but.Location = new Point(289, 141);
+            host_but.Location = new Point(289, 123);
             host_but.Name = "host_but";
             host_but.Size = new Size(208, 50);
             host_but.TabIndex = 1;
@@ -56,11 +57,13 @@
             // 
             // Vivod
             // 
-            Vivod.Location = new Point(280, 24);
+            Vivod.AutoEllipsis = true;
+            Vivod.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            Vivod.Location = new Point(280, 9);
             Vivod.Name = "Vivod";
-            Vivod.Size = new Size(237, 99);
+            Vivod.Size = new Size(237, 68);
             Vivod.TabIndex = 3;
-            Vivod.Text = "label1";
+  
             // 
             // IpTextBox
             // 
@@ -72,11 +75,22 @@
             IpTextBox.Size = new Size(130, 26);
             IpTextBox.TabIndex = 4;
             // 
+            // buttonSendMessage
+            // 
+            buttonSendMessage.Location = new Point(314, 179);
+            buttonSendMessage.Name = "buttonSendMessage";
+            buttonSendMessage.Size = new Size(165, 23);
+            buttonSendMessage.TabIndex = 5;
+            buttonSendMessage.Text = "Отправить всем \"привет\"";
+            buttonSendMessage.UseVisualStyleBackColor = true;
+            buttonSendMessage.Click += buttonSendMessage_Click;
+            // 
             // ChoseGameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(buttonSendMessage);
             Controls.Add(IpTextBox);
             Controls.Add(Vivod);
             Controls.Add(join_but);
@@ -95,5 +109,6 @@
         private Button join_but;
         private Label Vivod;
         private TextBox IpTextBox;
+        private Button buttonSendMessage;
     }
 }
