@@ -97,7 +97,15 @@ namespace SignGame
             while (true)
             {
                 // Асинхронное чтение данных от сервера
-                size = await stream.ReadAsync(buffer, 0, buffer.Length);
+                try 
+                {
+                    size = await stream.ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch     
+                {
+                    connectedClients.Remove(tcpClient);
+                    tcpClient.Close();
+                }
                 // Строка для хранения данных от клиента
                 var data = new StringBuilder();
 
