@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChoseGameForm));
             host_but = new Button();
             join_but = new Button();
             Vivod = new Label();
             IpTextBox = new TextBox();
             buttonSendMessage = new Button();
+            MessageTextBox = new TextBox();
             SuspendLayout();
             // 
             // host_but
@@ -47,7 +49,7 @@
             // 
             // join_but
             // 
-            join_but.Location = new Point(289, 262);
+            join_but.Location = new Point(289, 310);
             join_but.Name = "join_but";
             join_but.Size = new Size(208, 50);
             join_but.TabIndex = 2;
@@ -58,18 +60,19 @@
             // Vivod
             // 
             Vivod.AutoEllipsis = true;
+            Vivod.BackColor = Color.Transparent;
             Vivod.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            Vivod.Location = new Point(280, 9);
+            Vivod.ForeColor = SystemColors.Control;
+            Vivod.Location = new Point(12, 9);
             Vivod.Name = "Vivod";
-            Vivod.Size = new Size(237, 68);
+            Vivod.Size = new Size(237, 164);
             Vivod.TabIndex = 3;
-  
             // 
             // IpTextBox
             // 
             IpTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             IpTextBox.Font = new Font("Arial Narrow", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            IpTextBox.Location = new Point(323, 318);
+            IpTextBox.Location = new Point(330, 366);
             IpTextBox.Name = "IpTextBox";
             IpTextBox.PlaceholderText = "Введите ip";
             IpTextBox.Size = new Size(130, 26);
@@ -77,19 +80,33 @@
             // 
             // buttonSendMessage
             // 
-            buttonSendMessage.Location = new Point(314, 179);
+            buttonSendMessage.Location = new Point(393, 176);
             buttonSendMessage.Name = "buttonSendMessage";
-            buttonSendMessage.Size = new Size(165, 23);
+            buttonSendMessage.Size = new Size(181, 26);
             buttonSendMessage.TabIndex = 5;
-            buttonSendMessage.Text = "Отправить всем \"привет\"";
+            buttonSendMessage.Text = "Отправить всем сообщение";
             buttonSendMessage.UseVisualStyleBackColor = true;
             buttonSendMessage.Click += buttonSendMessage_Click;
+            // 
+            // MessageTextBox
+            // 
+            MessageTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            MessageTextBox.Font = new Font("Arial Narrow", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            MessageTextBox.Location = new Point(225, 176);
+            MessageTextBox.Name = "MessageTextBox";
+            MessageTextBox.PlaceholderText = "Введите сообщение";
+            MessageTextBox.Size = new Size(162, 26);
+            MessageTextBox.TabIndex = 6;
             // 
             // ChoseGameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.Highlight;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
+            Controls.Add(MessageTextBox);
             Controls.Add(buttonSendMessage);
             Controls.Add(IpTextBox);
             Controls.Add(Vivod);
@@ -110,5 +127,6 @@
         private Label Vivod;
         private TextBox IpTextBox;
         private Button buttonSendMessage;
+        private TextBox MessageTextBox;
     }
 }

@@ -54,7 +54,10 @@ namespace SignGame
 
             // Задаем уникальное имя для Label
             newLabel.Name = "IPlabel";
-
+            // Задаем задний фон
+            newLabel.BackColor = Color.Transparent;
+            // Задаем цвет шрифта
+            newLabel.ForeColor = SystemColors.Control;
             // Задаем координаты и размер Label
             newLabel.Location = new Point(330, 100);
             newLabel.Size = new Size(200, 20);
@@ -97,11 +100,11 @@ namespace SignGame
             while (true)
             {
                 // Асинхронное чтение данных от сервера
-                try 
+                try
                 {
                     size = await stream.ReadAsync(buffer, 0, buffer.Length);
                 }
-                catch     
+                catch
                 {
                     int idClient = connectedClients.FindIndex(client => client == tcpClient);
                     UserConnected.Remove(UserConnected[idClient]);
@@ -151,15 +154,12 @@ namespace SignGame
         private void refresh_label()
         {
             string s = "";
-            foreach (User client in UserConnected)
-            {
-                s += client.Name + " - " + client.Scores + "\n";
-            }
+            foreach (User client in UserConnected) s += client.Name + " - " + client.Scores + "\n";
             // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
             Vivod.Invoke((MethodInvoker)delegate
             {
                 // Отображаем информацию о клиенте на форме
-                Vivod.Text = s;      
+                Vivod.Text = s;
             });
         }
 
@@ -169,7 +169,7 @@ namespace SignGame
         private async void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedClients.Count == 0) return;
-            await BroadcastMessage("Прибавить всем баллы");
+            await BroadcastMessage(MessageTextBox.Text);
         }
         /// <summary>
         /// Отправка всем клиетам сообщения
@@ -250,28 +250,27 @@ namespace SignGame
                 {
                     size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
                 }
-                catch 
+                catch
                 {
                     Vivod.Text = "Сервер отключился";
                     break;
                 }
 
                 if (size == 0) break;
-      
+
 
                 // Обработка полученных данных, например, вывод на форму
                 string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
-                if(receivedMessage != "Прибавить всем баллы") 
+                if (receivedMessage != "Прибавить всем баллы")
                 {
                     Vivod.Invoke((MethodInvoker)delegate
                     {
                         Vivod.Text = receivedMessage;
                     });
                 }
-                else 
+                else
                 {
                     manageUser.User.ChangeScores(5);
-                    Vivod.Text = "Успешно + 5 очков";
                     json = JsonConvert.SerializeObject(manageUser.User);
                     message = Encoding.UTF8.GetBytes(json);
                     await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
