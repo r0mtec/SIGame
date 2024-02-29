@@ -103,8 +103,11 @@ namespace SignGame
                 }
                 catch     
                 {
+                    int idClient = connectedClients.FindIndex(client => client == tcpClient);
+                    UserConnected.Remove(UserConnected[idClient]);
                     connectedClients.Remove(tcpClient);
                     tcpClient.Close();
+                    refresh_label();
                 }
                 // Строка для хранения данных от клиента
                 var data = new StringBuilder();
