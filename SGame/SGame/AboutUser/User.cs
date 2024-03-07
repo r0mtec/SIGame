@@ -1,5 +1,5 @@
 ﻿using System.Net;
-namespace SignGame;
+namespace SGame.AboutUser;
 public class User
 {
     /// <summary>
@@ -19,7 +19,7 @@ public class User
     /// </summary>
     /// <param name="name">Никнейм</param>
     /// <param name="scores">Очки</param>
-    public User(string name, int scores) 
+    public User(string name, int scores)
     {
         Name = name;
         Scores = scores;
@@ -44,7 +44,7 @@ public class User
     /// Изменение очков у пользователя
     /// </summary>
     /// <param name="change">Сумма изменения очков</param>
-    public void ChangeScores(int change) 
+    public void ChangeScores(int change)
     {
         Scores += change;
     }

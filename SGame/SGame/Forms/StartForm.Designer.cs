@@ -37,9 +37,10 @@
             // create_button
             // 
             create_button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            create_button.Location = new Point(338, 204);
+            create_button.AutoSize = true;
+            create_button.Location = new Point(338, 205);
             create_button.Name = "create_button";
-            create_button.Size = new Size(130, 60);
+            create_button.Size = new Size(130, 39);
             create_button.TabIndex = 0;
             create_button.Text = "Войти";
             create_button.UseVisualStyleBackColor = true;
@@ -65,6 +66,7 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(800, 450);
             panel1.TabIndex = 2;
+            panel1.Paint += panel1_Paint;
             // 
             // StartForm
             // 
@@ -72,6 +74,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "StartForm";
             Text = "Main";
             panel1.ResumeLayout(false);
