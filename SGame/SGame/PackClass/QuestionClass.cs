@@ -8,20 +8,22 @@ namespace SGame.PackClass
 {
     public class QuestionClass
     {
-        private String question = "";
+        public String? question {  get; private set; }
 
-        private int price = 0;
+        public int? price { get; private set; }
 
-        private String? answer = "";
+        public String? answer { get; private set; }
         
-        private bool type = false;
+        public bool? type { get; private set; }
 
+       
 
-        void initQuestion (StreamReader fileStream)
+        public void initQuestion (StreamReader fileStream)
         {
+            type = false;
             String buf;
-            String question = "";
-            String answer = "";
+            question = "";
+            answer = "";
             if (fileStream.ReadLine() == "?? PRICE ??") {
                 try
                 {
@@ -31,30 +33,32 @@ namespace SGame.PackClass
                     price = 100;
                 }
             }
-            if (fileStream.ReadLine() == "?? QUESTION ??")
+            buf = new string(fileStream.ReadLine());
+            if (buf == "?? QUESTION ??")
             {
-                buf = fileStream.ReadLine();
+                buf = new string(fileStream.ReadLine());
                 while (buf != "?? QUESTION END ??") {
                     question += buf;
-                    buf = fileStream.ReadLine();
+                    buf = new string(fileStream.ReadLine());
                 }
             }
-            else if (fileStream.ReadLine() == "?? QUESTION PHOTO ??")
+            else if (buf == "?? QUESTION PHOTO ??")
             {
-                buf = fileStream.ReadLine();
+                buf = new string(fileStream.ReadLine());
                 while (buf != "?? QUESTION PHOTO END ??")
                 {
                     question += buf;
-                    buf = fileStream.ReadLine();
+                    buf = new string(fileStream.ReadLine());
                 }
             }
+
             if (fileStream.ReadLine() == "?? ANSWER ??")
             {
-                buf = fileStream.ReadLine();
+                buf = new string(fileStream.ReadLine());
                 while (buf != "?? ANSWER END ??")
                 {
                     answer += buf;
-                    buf = fileStream.ReadLine();
+                    buf = new string(fileStream.ReadLine());
                 }
             }
         }
