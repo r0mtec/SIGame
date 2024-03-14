@@ -20,12 +20,10 @@ namespace SignGame
         /// <summary>
         /// Поле-обьект для работы с пользователем
         /// </summary>
-        private ManageUser manageUser;
         private MainForm? mainForm;
-        public ChoseGameForm(ManageUser manageUser, MainForm parrentForm)
+        public ChoseGameForm(MainForm parrentForm)
         {
             InitializeComponent();
-            this.manageUser = manageUser;
             mainForm = parrentForm;
         }
 
@@ -34,8 +32,8 @@ namespace SignGame
         /// </summary>
         private void HostButton_click(object sender, EventArgs e)
         {
-            if (manageUser == null || mainForm == null) return;
-            mainForm.ChangeForm(new HostForm(manageUser, mainForm));
+            if (mainForm.manageUser == null || mainForm == null) return;
+            mainForm.ChangeForm(new HostForm(mainForm));
         }
         /*
         private void refresh_label()
@@ -87,14 +85,13 @@ namespace SignGame
         
         private async void join_but_Click(object sender, EventArgs e)
         {
-            if (manageUser == null || manageUser.User == null) return;
 
             // Проверяем, что поле ввода IP-адреса не пустое
             if (IpTextBox.Text == "")
             {
                 return;
             }
-            mainForm.ChangeForm(new WaitGameForm(manageUser, mainForm, IpTextBox.Text));
+            mainForm.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
             
         }
     }

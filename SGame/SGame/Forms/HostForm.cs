@@ -17,12 +17,10 @@ namespace SGame.Forms
 {
     public partial class HostForm : Form
     {
-        private ManageUser manageUser;
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private MainForm? mainForm;
-        public HostForm(ManageUser manageUser, MainForm? parrentForm)
+        public HostForm(MainForm? parrentForm)
         {
-            this.manageUser = manageUser;
             this.mainForm = parrentForm;
             InitializeComponent();
             HostGame();
@@ -30,8 +28,8 @@ namespace SGame.Forms
         }
         private async void HostGame()
         {
-            if (manageUser == null || manageUser.User == null) return;
-            string ip = manageUser.User.Ip;
+            if (mainForm.manageUser == null || mainForm.manageUser.User == null) return;
+            string ip = mainForm.manageUser.User.Ip;
             const int port = 8080;
 
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -41,7 +39,7 @@ namespace SGame.Forms
 
 
             // Задаем текст для Label
-            ipLabel.Text = "Ваш айпи - " + manageUser.User.Ip;
+            ipLabel.Text = "Ваш айпи - " + mainForm.manageUser.User.Ip;
 
 
             // Цикл для приема новых "клиентов"
@@ -161,6 +159,10 @@ namespace SGame.Forms
             }
             refresh_label();
         }
-        
+
+        private async void buttonStartGame_Click(object sender, EventArgs e)
+        {
+            await BroadcastMessage("Start game");
+        }
     }
 }
