@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using SGame.PackClass;
 
 namespace SGame.Forms
 {
@@ -19,6 +20,7 @@ namespace SGame.Forms
     {
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private MainForm? mainForm;
+        ThemesClass theme = new ThemesClass();
         public HostForm(MainForm? parrentForm)
         {
             this.mainForm = parrentForm;
@@ -74,6 +76,8 @@ namespace SGame.Forms
                     int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                     connectedUsers.Remove(connectedUsers[idClient]);
                     tcpClient.Close();
+                    refresh_label();
+                    break;
                 }
                 // Строка для хранения данных от клиента
                 var data = new StringBuilder();
@@ -163,6 +167,8 @@ namespace SGame.Forms
         private async void buttonStartGame_Click(object sender, EventArgs e)
         {
             await BroadcastMessage("Start game");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            theme.initTheme(new StreamReader("C:\\Users\\busla\\source\\repos\\SignGame\\Sgame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt", Encoding.GetEncoding(1251)));
         }
     }
 }

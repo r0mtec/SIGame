@@ -127,6 +127,7 @@ namespace SGame.Forms
                 else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
                 {
                     mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint));
+                    break;
                 }
                 else if (receivedMessage == "Прибавить всем баллы")
                 {

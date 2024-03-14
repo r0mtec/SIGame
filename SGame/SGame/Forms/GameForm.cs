@@ -13,12 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace SGame.Forms;
 
 public partial class GameForm : Form
 {
     private IPEndPoint tcpEndPoint;
-    ThemesClass theme = new ThemesClass();
+    
     MainForm mainForm;
     private List<string> Parse(string otv)
     {
@@ -55,10 +56,10 @@ public partial class GameForm : Form
     }
     public GameForm(MainForm parentForm, IPEndPoint tcpEP)
     {
+       
         InitializeComponent();
         tcpEndPoint = tcpEP;
-
-        theme.initTheme(new StreamReader("C:\\Users\\busok\\source\\repos\\SignGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt", Encoding.Default));
+        
         mainForm = parentForm;
         Listener();
     }
