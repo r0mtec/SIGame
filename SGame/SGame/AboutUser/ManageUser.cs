@@ -1,4 +1,4 @@
-﻿namespace SignGame;
+﻿namespace SGame.AboutUser;
 
 public class ManageUser
 {
