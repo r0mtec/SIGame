@@ -32,6 +32,7 @@
             MessageTextBox = new TextBox();
             buttonSendMessage = new Button();
             playersListLabes = new Label();
+            buttonStartGame = new Button();
             SuspendLayout();
             // 
             // ipLabel
@@ -75,11 +76,22 @@
             playersListLabes.Size = new Size(612, 164);
             playersListLabes.TabIndex = 9;
             // 
+            // buttonStartGame
+            // 
+            buttonStartGame.Location = new Point(317, 150);
+            buttonStartGame.Name = "buttonStartGame";
+            buttonStartGame.Size = new Size(154, 43);
+            buttonStartGame.TabIndex = 10;
+            buttonStartGame.Text = "Start game";
+            buttonStartGame.UseVisualStyleBackColor = true;
+            buttonStartGame.Click += buttonStartGame_Click;
+            // 
             // HostForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(buttonStartGame);
             Controls.Add(playersListLabes);
             Controls.Add(buttonSendMessage);
             Controls.Add(MessageTextBox);
@@ -97,5 +109,6 @@
         private TextBox MessageTextBox;
         private Button buttonSendMessage;
         private Label playersListLabes;
+        private Button buttonStartGame;
     }
 }

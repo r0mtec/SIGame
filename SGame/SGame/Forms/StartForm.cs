@@ -41,7 +41,8 @@ namespace SignGame
             string nickname = text_name.Text;
             manageUser = new ManageUser();
             manageUser.Init(nickname, 0);
-            mainForm.ChangeForm(new ChoseGameForm(manageUser, mainForm));
+            mainForm.manageUser = manageUser;
+            mainForm.ChangeForm(new ChoseGameForm(mainForm));
             //PanelForm(new ChoseGameForm(manageUser));
 
         }
