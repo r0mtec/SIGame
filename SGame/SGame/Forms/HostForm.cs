@@ -193,7 +193,7 @@ namespace SGame.Forms
         {
             await BroadcastMessage("Start game");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            round.Init(new StreamReader("E:\\study\\secondsem\\Economics\\SIGame\\SGame\\SGame\\"
+            round.initRound(new StreamReader("E:\\study\\secondsem\\Economics\\SIGame\\SGame\\SGame\\"
                 + "PackClass\\Data\\TestFileQuestionRead.txt", Encoding.GetEncoding(1251)));
             await BroadcastMessage(round);
         }
