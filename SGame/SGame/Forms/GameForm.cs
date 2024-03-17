@@ -21,6 +21,8 @@ public partial class GameForm : Form
     private IPEndPoint tcpEndPoint;
     
     MainForm mainForm;
+
+    RoundClass round;
     private List<string> Parse(string otv)
     {
         List<string> words = new List<string>();
@@ -54,14 +56,13 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, IPEndPoint tcpEP)
+    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
     {
-       
-        InitializeComponent();
         tcpEndPoint = tcpEP;
-        
+        round = Round;
         mainForm = parentForm;
         Listener();
+        InitializeComponent(round);
     }
     private async void Listener()
     {
@@ -103,74 +104,12 @@ public partial class GameForm : Form
 
             // Обработка полученных данных, вывод на форму
             List<string> parseReceivedMessage = null;
-            RoundClass Round = null;
 
             string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
-            try 
-            { 
-                Round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage); 
-            }
-            catch (Exception ex) 
-            {
-                parseReceivedMessage = Parse(receivedMessage);
-            }
-
-            if (Round != null)
-            {
-                int width = Width, height = Height;
-                int numberOfTheme = 0;
-                foreach (var theme in Round.questionClasses)
-                {
-                    Label label = new Label();
-                    label.Name = "Theme" + numberOfTheme.ToString();
-                    label.Location = new Point(0, numberOfTheme * height / Round.questionClasses.Count);
-                    label.Size = new Size(100, height / Round.questionClasses.Count);
-                    label.Text = theme.themeName;
-                    label.BackColor = Color.DarkBlue;
-                    label.Padding = new Padding(6);
-                    label.Font = new Font("French Script MT", 18);
-                    this.Controls.Add(label);
-
-                    int numberOfQuestion = 0;
-                    foreach (var question in theme.questionClasses)
-                    {
-                        Button button = new Button();
-                        button.Name = "Button" + numberOfTheme.ToString() + numberOfQuestion.ToString();
-                        button.Location = new Point(100 + numberOfQuestion * (width - 100) / theme.questionClasses.Count, 
-                            numberOfTheme * height / Round.questionClasses.Count);
-                        label.Size = new Size((width - 100) / theme.questionClasses.Count, height / Round.questionClasses.Count);
-                        button.Text = question.question;
-                        button.BackColor = Color.LightBlue;
-                        button.Padding = new Padding(6);
-                        button.Font = new Font("French Script MT", 18);
-                        this.Controls.Add(button);
-
-                        numberOfQuestion++;
-                    }
-
-                    numberOfTheme++;
-                }
-            }
-
-            else if (Consist(parseReceivedMessage, new List<string> { "Start", "game" }))
-            {
-                mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint));
-            }
-            else if (receivedMessage == "Прибавить всем баллы")
-            {
-                mainForm.manageUser.User.ChangeScores(5);
-                json = JsonConvert.SerializeObject(mainForm.manageUser.User);
-                message = Encoding.UTF8.GetBytes(json);
-                await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
-
-            }
-            else
-            {
-            }
+            parseReceivedMessage = Parse(receivedMessage);
         }
 
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
-
 }
