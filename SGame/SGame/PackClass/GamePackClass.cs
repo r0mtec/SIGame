@@ -8,6 +8,24 @@ namespace SGame.PackClass
 {
     public class GamePackClass
     {
-        public List<RoundClass> questionClasses = new List<RoundClass>();
+        public List<RoundClass> roundClasses = new List<RoundClass>();
+   
+        public void initGame(StreamReader streamreader)
+        {
+            String buf = streamreader.ReadLine();
+            if (buf == "?? PACK START ??") {
+                buf =new String(streamreader.ReadLine());
+                RoundClass bufr = new RoundClass();
+                bufr.initRound(streamreader);
+                roundClasses.Add(bufr);
+                buf = new String(streamreader.ReadLine());
+                while (buf != "?? PACK END ??") {
+                    bufr = new RoundClass();
+                    bufr.initRound(streamreader);
+                    roundClasses.Add(bufr);
+                    buf = new String(streamreader.ReadLine());
+                }
+            }
+        }
     }
 }

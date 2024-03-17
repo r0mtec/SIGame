@@ -8,12 +8,32 @@ namespace SGame.PackClass
 {
     public class RoundClass
     {
-        public List<ThemesClass> questionClasses = new List<ThemesClass>();
-        public void Init(StreamReader streamReader)
+        static int countnumbers;
+        int number {  get; set; }
+        public List<ThemesClass> themeClasses = new List<ThemesClass>();
+        
+        public void initRound(StreamReader streamReader)
         {
-            ThemesClass theme = new ThemesClass();
-            theme.initTheme(streamReader);
-            questionClasses.Add(theme);
+            number = countnumbers;
+            countnumbers++;
+            String buf = streamReader.ReadLine();
+            if (buf == "?? ROUND START ??")
+            {
+                buf = new String(streamReader.ReadLine());
+                ThemesClass buft = new ThemesClass();
+                buft.initTheme(streamReader);
+                themeClasses.Add(buft);
+                buf = new String(streamReader.ReadLine());
+                while (buf != "?? ROUND END ??")
+                {
+                    buft = new ThemesClass();
+                    buft.initTheme(streamReader);
+                    themeClasses.Add(buft);
+                    buf = new String(streamReader.ReadLine());
+                }
+            }
         }
+
+
     }
 }
