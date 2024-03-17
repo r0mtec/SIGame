@@ -57,7 +57,7 @@ namespace SGame.Forms
             {
                 int width = panel.Width, height = panel.Height;
                 int numberOfTheme = 0;
-                foreach (var theme in round.themeClasses)
+                foreach (ThemesClass theme in round.themeClasses)
                 {
                     Label label = new Label();
                     label.Name = "Theme" + numberOfTheme.ToString();

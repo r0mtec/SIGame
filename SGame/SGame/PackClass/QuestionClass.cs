@@ -8,13 +8,13 @@ namespace SGame.PackClass
 {
     public class QuestionClass
     {
-        public String? question {  get; private set; }
+        public String? question {  get; set; }
 
-        public int? price { get; private set; }
+        public int? price { get; set; }
 
-        public String? answer { get; private set; }
+        public String? answer { get; set; }
         
-        public bool? type { get; private set; }
+        public bool? type { get; set; }
 
        
 
