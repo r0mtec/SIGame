@@ -13,16 +13,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using SGame.PackClass;
 
 namespace SGame.Forms
 {
     public partial class WaitGameForm : Form
     {
-        private ManageUser manageUser;
         private MainForm? mainForm;
-        public WaitGameForm(ManageUser manageUser, MainForm parentForm, string connectingIp)
+        public WaitGameForm(MainForm parentForm, string connectingIp)
         {
-            this.manageUser = manageUser;
             this.mainForm = parentForm;
             InitializeComponent();
             ConnectingToHost(connectingIp);
@@ -83,7 +82,7 @@ namespace SGame.Forms
             var tcpSocket = new TcpClient();
 
             // Сериализуем объект пользователя в формат JSON
-            string json = JsonConvert.SerializeObject(manageUser.User);
+            string json = JsonConvert.SerializeObject(mainForm.manageUser.User);
 
             // Преобразуем JSON-строку в массив байт
             var message = Encoding.UTF8.GetBytes(json);
@@ -95,7 +94,7 @@ namespace SGame.Forms
             await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
 
             // Буфер для приема данных от сервера
-            var buffer = new byte[256];
+            var buffer = new byte[65536];
             var size = 0;
 
             // Цикл для ожидания новых сообщений от сервера
@@ -115,6 +114,7 @@ namespace SGame.Forms
                 if (size == 0) break;
 
 
+
                 // Обработка полученных данных, вывод на форму
                 string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
                 List<string> parseReceivedMessage = Parse(receivedMessage);
@@ -126,19 +126,59 @@ namespace SGame.Forms
                     });
                     
                 }
-                if (receivedMessage != "Прибавить всем баллы")
+                else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
+                {
+                    while (true)
+                    {
+                        // Асинхронное чтение данных от сервера
+                        try
+                        {
+                            size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                        }
+                        catch
+                        {
+                            break;
+                        }
+
+                        if (size == 0) break;
+
+
+                        // Обработка полученных данных, вывод на форму
+                        parseReceivedMessage = null;
+                        RoundClass Round = null;
+
+                        receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
+                        try
+                        {
+                            Round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                        }
+                        catch (Exception ex)
+                        {
+                            parseReceivedMessage = Parse(receivedMessage);
+                        }
+
+                        if (Round != null)
+                        {
+                            mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint, Round));
+                        }
+                    }
+
+                    break;
+                }
+                else if (receivedMessage == "Прибавить всем баллы")
+                {
+                    mainForm.manageUser.User.ChangeScores(5);
+                    json = JsonConvert.SerializeObject(mainForm.manageUser.User);
+                    message = Encoding.UTF8.GetBytes(json);
+                    await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
+                    
+                }
+                else
                 {
                     messageLabel.Invoke((MethodInvoker)delegate
                     {
                         messageLabel.Text = receivedMessage;
                     });
-                }
-                else
-                {
-                    manageUser.User.ChangeScores(5);
-                    json = JsonConvert.SerializeObject(manageUser.User);
-                    message = Encoding.UTF8.GetBytes(json);
-                    await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
                 }
             }
 

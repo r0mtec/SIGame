@@ -1,10 +1,12 @@
-﻿using SignGame;
+﻿using SGame.AboutUser;
+using SignGame;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +16,7 @@ namespace SGame
     public partial class MainForm : Form
     {
         public Form? currentForm;
+        public ManageUser manageUser;
         public void ChangeForm(Form newForm)
         {
             if (currentForm != null)
@@ -28,6 +31,7 @@ namespace SGame
             newForm.BringToFront();
             newForm.Show();
         }
+
         public MainForm()
         {
             InitializeComponent();
