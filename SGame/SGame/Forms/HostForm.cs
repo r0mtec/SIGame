@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using SGame.PackClass;
+using System.Reflection;
 
 namespace SGame.Forms
 {
@@ -19,6 +21,7 @@ namespace SGame.Forms
     {
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private MainForm? mainForm;
+        RoundClass round = new RoundClass();
         public HostForm(MainForm? parrentForm)
         {
             this.mainForm = parrentForm;
@@ -74,6 +77,8 @@ namespace SGame.Forms
                     int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                     connectedUsers.Remove(connectedUsers[idClient]);
                     tcpClient.Close();
+                    refresh_label();
+                    break;
                 }
                 // Строка для хранения данных от клиента
                 var data = new StringBuilder();
@@ -124,7 +129,7 @@ namespace SGame.Forms
                 else s += client.User.Name + " - " + client.User.Scores + "\n";
             }
             // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
-            playersListLabes.Invoke((MethodInvoker)delegate
+            playersListLabes.Invoke((System.Windows.Forms.MethodInvoker)delegate
             {
                 // Отображаем информацию о клиенте на форме
                 playersListLabes.Text = s;
@@ -160,9 +165,37 @@ namespace SGame.Forms
             refresh_label();
         }
 
+        private async Task BroadcastMessage(RoundClass message)
+        {
+            string json = JsonConvert.SerializeObject(message);
+            byte[] data = Encoding.UTF8.GetBytes(json);
+
+            foreach (ConnectedUser client in connectedUsers)
+            {
+                if (client.Client == null)
+                {
+                    playersListLabes.Text = "Ошибка, нет пользователя";
+                    continue;
+                }
+                try
+                {
+                    await client.Client.GetStream().WriteAsync(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    playersListLabes.Text = "Ошибка при отправке данных";
+                }
+            }
+            refresh_label();
+        }
+
         private async void buttonStartGame_Click(object sender, EventArgs e)
         {
             await BroadcastMessage("Start game");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            round.Init(new StreamReader("E:\\study\\secondsem\\Economics\\SIGame\\SGame\\SGame\\"
+                + "PackClass\\Data\\TestFileQuestionRead.txt", Encoding.GetEncoding(1251)));
+            await BroadcastMessage(round);
         }
     }
 }
