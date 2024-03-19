@@ -12,16 +12,26 @@ namespace SGame.PackClass
 
         public int? price { get; set; }
 
+        List<String> varinats = new List<String>();
+
+        public List<String>? getVariantsAnswer()
+        {
+            if (varinats.Count == 0)
+            {
+                return null;
+            }
+            return varinats;
+        }
+
         public String? answer { get; set; }
         
         public bool? type { get; set; }
 
-       
-
         public void initQuestion (StreamReader fileStream)
         {
             type = false;
-            String buf;
+            String buf = "";
+            
             question = "";
             answer = "";
             if (fileStream.ReadLine() == "?? PRICE ??") {
@@ -37,8 +47,10 @@ namespace SGame.PackClass
             if (buf == "?? QUESTION ??")
             {
                 buf = new string(fileStream.ReadLine());
+                question += buf;
+                buf = new string(fileStream.ReadLine());    
                 while (buf != "?? QUESTION END ??") {
-                    question += buf;
+                    varinats.Add(buf);
                     buf = new string(fileStream.ReadLine());
                 }
             }
