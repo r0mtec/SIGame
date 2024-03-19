@@ -12,24 +12,38 @@ namespace SGame.PackClass
 
         public int? price { get; set; }
 
+        public bool isUsed = false;
+
+        public List<String> varinats = new List<String>();
+
+        public List<String>? getVariantsAnswer()
+        {
+            if (varinats.Count == 0)
+            {
+                return null;
+            }
+            return varinats;
+        }
+
         public String? answer { get; set; }
-        
+
         public bool? type { get; set; }
 
-       
-
-        public void initQuestion (StreamReader fileStream)
+        public void initQuestion(StreamReader fileStream)
         {
             type = false;
-            String buf;
+            String buf = "";
+
             question = "";
             answer = "";
-            if (fileStream.ReadLine() == "?? PRICE ??") {
+            if (fileStream.ReadLine() == "?? PRICE ??")
+            {
                 try
                 {
                     price = int.Parse(fileStream.ReadLine());
                 }
-                catch {
+                catch
+                {
                     price = 100;
                 }
             }
@@ -37,8 +51,11 @@ namespace SGame.PackClass
             if (buf == "?? QUESTION ??")
             {
                 buf = new string(fileStream.ReadLine());
-                while (buf != "?? QUESTION END ??") {
-                    question += buf;
+                question += buf;
+                buf = new string(fileStream.ReadLine());
+                while (buf != "?? QUESTION END ??")
+                {
+                    varinats.Add(buf);
                     buf = new string(fileStream.ReadLine());
                 }
             }

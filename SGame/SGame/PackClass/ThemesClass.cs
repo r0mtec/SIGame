@@ -9,7 +9,7 @@ namespace SGame.PackClass
 {
     public class ThemesClass
     {
-        public String? themeName {  get; set; }
+        public String? themeName { get; set; }
 
         public List<QuestionClass> questionClasses = new List<QuestionClass>();
 
@@ -18,7 +18,8 @@ namespace SGame.PackClass
         {
             themeName = "";
             String buf = streamReader.ReadLine();
-            if (buf == "?? THEME START ??") {
+            if (buf == "?? THEME START ??")
+            {
                 buf = new string(streamReader.ReadLine());
                 while (buf != "<<<>>>")
                 {
@@ -38,6 +39,6 @@ namespace SGame.PackClass
                 }
             }
         }
-    
+
     }
 }
