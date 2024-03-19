@@ -1,4 +1,7 @@
-﻿namespace SGame.Forms
+﻿using SGame.PackClass;
+using System.Text;
+
+namespace SGame.Forms
 {
     partial class GameForm
     {
@@ -26,34 +29,70 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        private void InitializeComponent(RoundClass round)
         {
-            groupBox1 = new GroupBox();
+            panel = new Panel();
             SuspendLayout();
             // 
-            // groupBox1
+            // panel
             // 
-            groupBox1.Location = new Point(130, 29);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(610, 337);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
+            panel.BackColor = SystemColors.Highlight;
+            panel.Dock = DockStyle.Fill;
+            panel.Location = new Point(0, 0);
+            panel.Name = "panel";
+            panel.Size = new Size(800, 450);
+            panel.TabIndex = 0;
             // 
             // GameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(groupBox1);
+            Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.None;
             Name = "GameForm";
             Text = "Game";
             ResumeLayout(false);
+
+            {
+                int width = panel.Width, height = panel.Height;
+                int numberOfTheme = 0;
+                foreach (ThemesClass theme in round.themeClasses)
+                {
+                    Label label = new Label();
+                    label.Name = "Theme" + numberOfTheme.ToString();
+                    label.Location = new Point(0, numberOfTheme * height / round.themeClasses.Count);
+                    label.Size = new Size(200, height / round.themeClasses.Count);
+                    label.Text = theme.themeName;
+                    label.BackColor = Color.DarkBlue;
+                    label.Padding = new Padding(6);
+                    label.Font = new Font("Arial", 18);
+                    panel.Controls.Add(label);
+
+                    int numberOfQuestion = 0;
+                    foreach (var question in theme.questionClasses)
+                    {
+                        Button button = new Button();
+                        button.Name = "Button" + numberOfTheme.ToString() + numberOfQuestion.ToString();
+                        button.Location = new Point(200 + numberOfQuestion * (width - 200) / theme.questionClasses.Count,
+                            numberOfTheme * height / round.themeClasses.Count);
+                        button.Size = new Size((width - 200) / theme.questionClasses.Count, height / round.themeClasses.Count);
+                        button.Text = question.question;
+                        button.BackColor = Color.LightBlue;
+                        button.Padding = new Padding(6);
+                        button.Font = new Font("Arial", 18);
+                        panel.Controls.Add(button);
+
+                        numberOfQuestion++;
+                    }
+
+                    numberOfTheme++;
+                }
+            }
         }
 
         #endregion
 
-        private GroupBox groupBox1;
+        private Panel panel;
     }
 }

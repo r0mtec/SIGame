@@ -13,13 +13,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace SGame.Forms;
 
 public partial class GameForm : Form
 {
     private IPEndPoint tcpEndPoint;
-    ThemesClass theme = new ThemesClass();
+    
     MainForm mainForm;
+
+    RoundClass round;
     private List<string> Parse(string otv)
     {
         List<string> words = new List<string>();
@@ -53,14 +56,13 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, IPEndPoint tcpEP)
+    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
     {
-        InitializeComponent();
         tcpEndPoint = tcpEP;
-
-        theme.initTheme(new StreamReader("C:\\Users\\busok\\source\\repos\\SignGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt", Encoding.Default));
+        round = Round;
         mainForm = parentForm;
         Listener();
+        InitializeComponent(round);
     }
     private async void Listener()
     {
@@ -81,7 +83,7 @@ public partial class GameForm : Form
         await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
 
         // Буфер для приема данных от сервера
-        var buffer = new byte[256];
+        var buffer = new byte[65536];
         var size = 0;
 
         // Цикл для ожидания новых сообщений от сервера
@@ -101,27 +103,13 @@ public partial class GameForm : Form
 
 
             // Обработка полученных данных, вывод на форму
-            string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
-            List<string> parseReceivedMessage = Parse(receivedMessage);
-            if (Consist(parseReceivedMessage, new List<string> { "Start", "game" }))
-            {
-                mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint));
-            }
-            else if (receivedMessage == "Прибавить всем баллы")
-            {
-                mainForm.manageUser.User.ChangeScores(5);
-                json = JsonConvert.SerializeObject(mainForm.manageUser.User);
-                message = Encoding.UTF8.GetBytes(json);
-                await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
+            List<string> parseReceivedMessage = null;
 
-            }
-            else
-            {
-            }
+            string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
+            parseReceivedMessage = Parse(receivedMessage);
         }
 
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
-
 }
