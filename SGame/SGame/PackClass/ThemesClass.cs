@@ -18,7 +18,8 @@ namespace SGame.PackClass
         {
             themeName = "";
             String buf = streamReader.ReadLine();
-            if (buf == "?? THEME START ??") { 
+            if (buf == "?? THEME START ??") {
+                buf = new string(streamReader.ReadLine());
                 while (buf != "<<<>>>")
                 {
                     themeName += buf;
@@ -32,6 +33,7 @@ namespace SGame.PackClass
                 {
                     bufq = new QuestionClass();
                     bufq.initQuestion(streamReader);
+                    questionClasses.Add(bufq);
                     buf = new string(streamReader.ReadLine());
                 }
             }
