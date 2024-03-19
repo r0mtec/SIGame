@@ -13,7 +13,7 @@ namespace SGame.PackClass
         public void initGame(StreamReader streamreader)
         {
             String buf = streamreader.ReadLine();
-            if (buf == "?? PACK START ??") {
+            if (buf == "?? START PACK ??") {
                 buf =new String(streamreader.ReadLine());
                 RoundClass bufr = new RoundClass();
                 bufr.initRound(streamreader);

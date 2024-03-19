@@ -9,7 +9,7 @@ namespace SGame.PackClass
     public class RoundClass
     {
         static int countnumbers;
-        int number { get; set; }
+        int number {  get; set; }
         public List<ThemesClass> themeClasses = new List<ThemesClass>();
 
         public void initRound(StreamReader streamReader)
