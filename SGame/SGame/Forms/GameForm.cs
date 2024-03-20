@@ -62,7 +62,7 @@ public partial class GameForm : Form
         round = Round;
         mainForm = parentForm;
         Listener();
-        InitializeComponent(round);
+        //InitializeComponent(round);
     }
     private async void Listener()
     {

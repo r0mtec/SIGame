@@ -17,14 +17,14 @@ namespace SGame.PackClass
             number = countnumbers;
             countnumbers++;
             String buf = streamReader.ReadLine();
-            if (buf == "?? ROUND START ??")
+            if (buf.Contains("ROUND START"))
             {
                 buf = new String(streamReader.ReadLine());
                 ThemesClass buft = new ThemesClass();
                 buft.initTheme(streamReader);
                 themeClasses.Add(buft);
                 buf = new String(streamReader.ReadLine());
-                while (buf != "?? ROUND END ??")
+                while (!buf.Contains("ROUND END"))
                 {
                     buft = new ThemesClass();
                     buft.initTheme(streamReader);
