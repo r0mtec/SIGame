@@ -10,8 +10,9 @@ namespace SGame.AboutUser;
 
 internal class ConnectedUser
 {
-    public TcpClient? Client { get; private set; }
+    public TcpClient? Client { get; set; }
     public User? User { get; set; }
+    public bool isOtv = true;
     public ConnectedUser(TcpClient? client, User user)
     {
         Client = client;

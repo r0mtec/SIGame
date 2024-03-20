@@ -120,11 +120,7 @@ namespace SGame.Forms
                 List<string> parseReceivedMessage = Parse(receivedMessage);
                 if (Consist(parseReceivedMessage, new List<string> { "count" }))
                 {
-                    countPlayersLabel.Invoke((MethodInvoker)delegate
-                    {
-                        countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
-                    });
-                    
+                    countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
                 }
                 else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
                 {
@@ -159,27 +155,13 @@ namespace SGame.Forms
 
                         if (Round != null)
                         {
-                            mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint, Round));
+                            //tcpSocket.Close();
+                            mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, Round));
+
                         }
                     }
-
                     break;
-                }
-                else if (receivedMessage == "Прибавить всем баллы")
-                {
-                    mainForm.manageUser.User.ChangeScores(5);
-                    json = JsonConvert.SerializeObject(mainForm.manageUser.User);
-                    message = Encoding.UTF8.GetBytes(json);
-                    await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
-                    
-                }
-                else
-                {
-                    messageLabel.Invoke((MethodInvoker)delegate
-                    {
-                        messageLabel.Text = receivedMessage;
-                    });
-                }
+                };
             }
 
             // Завершаем соединение и закрываем сокет

@@ -19,6 +19,39 @@ namespace SGame.Forms
 {
     public partial class HostForm : Form
     {
+        private List<string> Parse(string otv)
+        {
+            List<string> words = new List<string>();
+            string temp = "";
+            otv += " ";
+            for (int i = 0; i < otv.Length; i++)
+            {
+                if (otv[i] == ' ')
+                {
+                    words.Add(temp);
+                    temp = "";
+                }
+                else if (otv[i] != '\\' && otv[i] != '"') temp += otv[i];
+            }
+            return words;
+        }
+        private bool Consist(List<string> words, List<string> wordToFind)
+        {
+            int count = wordToFind.Count;
+            foreach (string word in words)
+            {
+                foreach (string check in wordToFind)
+                {
+                    if (word == check)
+                    {
+                        count--;
+                        wordToFind.Remove(check);
+                        break;
+                    }
+                }
+            }
+            return count == 0;
+        }
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private MainForm? mainForm;
         RoundClass round = new RoundClass();
@@ -62,7 +95,7 @@ namespace SGame.Forms
             var stream = tcpClient.GetStream();
 
             // Буфер для чтения данных
-            var buffer = new byte[256];
+            var buffer = new byte[65536];
             var size = 0;
 
             while (true)
@@ -75,6 +108,7 @@ namespace SGame.Forms
                 catch
                 {
                     int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
+                    if(idClient == -1) return;
                     connectedUsers.Remove(connectedUsers[idClient]);
                     tcpClient.Close();
                     refresh_label();
@@ -90,29 +124,50 @@ namespace SGame.Forms
 
                     // Десериализуем полученные данные в объект User
                     string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size);
-                    User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
-
-                    // Поиск пользователя в списке
-                    int index = connectedUsers.FindIndex(client => client.Client == tcpClient);
-
-                    if (index != -1)
+                    try 
                     {
-                        // Элемент найден, изменяем его
-                        connectedUsers[index].User = AnwerUser;
+                        User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
+                        if (AnwerUser.Name != null)
+                        {
+                            // Поиск пользователя в списке
+                            int index = connectedUsers.FindIndex(client => client.Client == tcpClient);
 
+                            if (index != -1)
+                            {
+                                // Элемент найден, изменяем его
+                                connectedUsers[index].User = AnwerUser;
+
+                            }
+                            else
+                            {
+                                connectedUsers.Add(new ConnectedUser(tcpClient, AnwerUser));
+                                BroadcastMessage(connectedUsers.Count.ToString() + " count");
+                            }
+                            refresh_label();
+                        }
+                        
                     }
-                    else
+                    catch{  }; 
+                    try
                     {
-                        connectedUsers.Add(new ConnectedUser(tcpClient, AnwerUser));
-                        _ = BroadcastMessage(connectedUsers.Count.ToString() + " count");
+                        QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(jsonAnswer);
+                        if(question.question != null) 
+                        {
+                            int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
+                            if (connectedUsers[idClient].isOtv)
+                            {
+                                question.isUsed = true;
+                                BroadcastMessage(question);
+                            }
+                        }
+                        
                     }
-                    refresh_label();
-                    // Сериализуем информацию о текущем пользователе и отправляем обратно клиенту
-                    var message = "Успех!";
-
-                    var dataM = Encoding.UTF8.GetBytes(message);
-
-                    await stream.WriteAsync(dataM);
+                    catch { };
+                    List<string> parseReceivedMessage = Parse(jsonAnswer);
+                    if(Consist(parseReceivedMessage, new List<string> {"+"}))
+                    {
+                        BroadcastMessage("afesersrhrd");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -139,10 +194,10 @@ namespace SGame.Forms
         private async void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedUsers.Count == 0) return;
-            await BroadcastMessage(MessageTextBox.Text);
+            BroadcastMessage(MessageTextBox.Text);
         }
 
-        private async Task BroadcastMessage(string message)
+        private async void BroadcastMessage(string message)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
 
@@ -164,8 +219,7 @@ namespace SGame.Forms
             }
             refresh_label();
         }
-
-        private async Task BroadcastMessage(RoundClass message)
+        private async void BroadcastMessage(RoundClass message)
         {
             string json = JsonConvert.SerializeObject(message);
             byte[] data = Encoding.UTF8.GetBytes(json);
@@ -188,16 +242,39 @@ namespace SGame.Forms
             }
             refresh_label();
         }
+        private async void BroadcastMessage(QuestionClass message)
+        {
+            string json = JsonConvert.SerializeObject(message);
+            byte[] data = Encoding.UTF8.GetBytes(json);
 
+            foreach (ConnectedUser client in connectedUsers)
+            {
+                if (client.Client == null)
+                {
+                    playersListLabes.Text = "Ошибка, нет пользователя";
+                    continue;
+                }
+                try
+                {
+                    await client.Client.GetStream().WriteAsync(data, 0, data.Length);
+                    //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    playersListLabes.Text = "Ошибка при отправке данных";
+                }
+            }
+            refresh_label();
+        }
         private async void buttonStartGame_Click(object sender, EventArgs e)
         {
-            await BroadcastMessage("Start game");
+            BroadcastMessage("Start game");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            //round.initRound(new StreamReader("E:\\study\\secondsem\\Economics\\SIGame\\SGame\\SGame\\"
-            //    + "PackClass\\Data\\TestFileQuestionRead.txt", Encoding.GetEncoding(1251)));
-            round.initRound(new StreamReader("C:\\Users\\busla\\source\\repos\\SIGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt",
+            round.initRound(new StreamReader("C:\\Users\\busla\\OneDrive\\Рабочий стол\\gaam\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt", 
                 Encoding.GetEncoding(1251)));
-            await BroadcastMessage(round);
+            //round.initRound(new StreamReader("C:\\Users\\busla\\source\\repos\\SIGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt",
+            //    Encoding.GetEncoding(1251)));
+            BroadcastMessage(round);
         }
     }
 }

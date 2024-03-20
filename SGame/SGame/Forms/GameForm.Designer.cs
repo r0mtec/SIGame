@@ -1,4 +1,7 @@
-﻿namespace SGame.Forms
+﻿using SGame.PackClass;
+using System.Text;
+
+namespace SGame.Forms
 {
     partial class GameForm
     {
@@ -59,9 +62,7 @@
                     button.Enabled = !question.isUsed;
                     button.Click += (sender, e) =>
                     {
-                        button.Enabled = false;
-                        question.isUsed = true;
-                        ChooseQuestion(question);
+                        SendHost(question);
                     };
 
                     panel.Controls.Add(button);
@@ -75,6 +76,17 @@
 
         private void ChooseQuestion(QuestionClass question)
         {
+            foreach (ThemesClass theme in round.themeClasses)
+            {
+                foreach (var question1 in theme.questionClasses)
+                {
+                    if (question.question == question1.question)
+                    {
+                        question1.isUsed = true;
+                        break;
+                    }
+                }
+            }
             while (panel.Controls.Count > 0)
             {
                 Control control = panel.Controls[0]; 
@@ -114,8 +126,9 @@
                     button.Enabled = false;
                     if (textBox.Text == question.answer)
                     {
-
+                        SendHost("+ 200");
                     }
+                    SendHost("+ 200");
                     AddControlsToPanel();
                 };
 
@@ -141,6 +154,7 @@
                         button.Enabled = false;
                         if (variant == question.answer)
                         {
+
                         }
                         AddControlsToPanel();
                     };
@@ -159,10 +173,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            panel = new Panel();
             SuspendLayout();
             // 
-            // groupBox1
+            // panel
             // 
             panel.BackColor = SystemColors.Highlight;
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -185,6 +199,6 @@
 
         #endregion
 
-        private GroupBox groupBox1;
+        private Panel panel;
     }
 }
