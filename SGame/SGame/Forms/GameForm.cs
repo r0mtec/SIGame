@@ -63,7 +63,6 @@ public partial class GameForm : Form
         mainForm = parentForm;
         Listener();
         InitializeComponent();
-
         AddControlsToPanel();
     }
     private async void Listener()

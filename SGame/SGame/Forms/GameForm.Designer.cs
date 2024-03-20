@@ -1,7 +1,4 @@
-﻿using SGame.PackClass;
-using System.Text;
-
-namespace SGame.Forms
+﻿namespace SGame.Forms
 {
     partial class GameForm
     {
@@ -162,10 +159,10 @@ namespace SGame.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            panel = new Panel();
+            groupBox1 = new GroupBox();
             SuspendLayout();
             // 
-            // panel
+            // groupBox1
             // 
             panel.BackColor = SystemColors.Highlight;
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -188,6 +185,6 @@ namespace SGame.Forms
 
         #endregion
 
-        private Panel panel;
+        private GroupBox groupBox1;
     }
 }

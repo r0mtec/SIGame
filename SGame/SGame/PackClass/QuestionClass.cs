@@ -12,9 +12,7 @@ namespace SGame.PackClass
 
         public int? price { get; set; }
 
-        public bool isUsed = false;
-
-        public List<String> varinats = new List<String>();
+        List<String> varinats = new List<String>();
 
         public List<String>? getVariantsAnswer()
         {
@@ -25,19 +23,18 @@ namespace SGame.PackClass
             return varinats;
         }
 
-        public String? answer { get; set; }
-
-        public bool? type { get; set; }
-
-        public void initQuestion(StreamReader fileStream)
+        public String? answer { get; private set; }
+        
+        public bool? type { get; private set; }
+        public bool isUsed = false;
+        public void initQuestion (StreamReader fileStream)
         {
             type = false;
             String buf = "";
-
+            
             question = "";
             answer = "";
-            if (fileStream.ReadLine() == "?? PRICE ??")
-            {
+            if (fileStream.ReadLine().Contains("PRICE")) {
                 try
                 {
                     price = int.Parse(fileStream.ReadLine());
@@ -48,31 +45,30 @@ namespace SGame.PackClass
                 }
             }
             buf = new string(fileStream.ReadLine());
-            if (buf == "?? QUESTION ??")
+            if (buf.Contains("QUESTION"))
             {
                 buf = new string(fileStream.ReadLine());
                 question += buf;
-                buf = new string(fileStream.ReadLine());
-                while (buf != "?? QUESTION END ??")
-                {
+                buf = new string(fileStream.ReadLine());    
+                while (!buf.Contains("QUESTION END")) {
                     varinats.Add(buf);
                     buf = new string(fileStream.ReadLine());
                 }
             }
-            else if (buf == "?? QUESTION PHOTO ??")
+            else if (buf.Contains("QUESTION PHOTO"))
             {
                 buf = new string(fileStream.ReadLine());
-                while (buf != "?? QUESTION PHOTO END ??")
+                while (!buf.Contains("QUESTION PHOTO END"))
                 {
                     question += buf;
                     buf = new string(fileStream.ReadLine());
                 }
             }
 
-            if (fileStream.ReadLine() == "?? ANSWER ??")
+            if (fileStream.ReadLine().Contains("ANSWER"))
             {
                 buf = new string(fileStream.ReadLine());
-                while (buf != "?? ANSWER END ??")
+                while (!buf.Contains("ANSWER END"))
                 {
                     answer += buf;
                     buf = new string(fileStream.ReadLine());
