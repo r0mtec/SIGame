@@ -8,9 +8,9 @@ namespace SGame.PackClass
 {
     public class QuestionClass
     {
-        public String? question {  get; private set; }
+        public String? question {  get; set; }
 
-        public int? price { get; private set; }
+        public int? price { get; set; }
 
         List<String> varinats = new List<String>();
 
@@ -26,7 +26,7 @@ namespace SGame.PackClass
         public String? answer { get; private set; }
         
         public bool? type { get; private set; }
-
+        public bool isUsed = false;
         public void initQuestion (StreamReader fileStream)
         {
             type = false;
@@ -39,7 +39,8 @@ namespace SGame.PackClass
                 {
                     price = int.Parse(fileStream.ReadLine());
                 }
-                catch {
+                catch
+                {
                     price = 100;
                 }
             }
