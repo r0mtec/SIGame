@@ -343,9 +343,12 @@ namespace SGame.Forms
             if (next)
             {
                 if (numberRound >= game.roundClasses.Count) return;
-                BroadcastMessage(game.roundClasses[numberRound]);
-                await Task.Delay(100);
+                BroadcastMessage("мусор");
+                round = game.roundClasses[numberRound];
+                BroadcastMessage(round);
+                await Task.Delay(500);
                 BroadcastMessage(connectedUsers);
+                BroadcastMessage("мусор");
                 numberRound++;
             }
         }
