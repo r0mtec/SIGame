@@ -32,7 +32,7 @@ namespace SignGame
         /// </summary>
         private void HostButton_click(object sender, EventArgs e)
         {
-            if (mainForm.manageUser == null || mainForm == null) return;
+            if (mainForm?.manageUser == null || mainForm == null) return;
             mainForm.ChangeForm(new HostForm(mainForm));
         }
         /*
@@ -83,7 +83,7 @@ namespace SignGame
 
 
         
-        private async void join_but_Click(object sender, EventArgs e)
+        private void join_but_Click(object sender, EventArgs e)
         {
 
             // Проверяем, что поле ввода IP-адреса не пустое
@@ -91,7 +91,7 @@ namespace SignGame
             {
                 return;
             }
-            mainForm.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
+            mainForm?.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
             
         }
     }

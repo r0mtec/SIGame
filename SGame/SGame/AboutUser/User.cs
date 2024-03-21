@@ -5,15 +5,16 @@ public class User
     /// <summary>
     /// Никнейм пользователя
     /// </summary>
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
     /// <summary>
     /// Количество очков пользователя
     /// </summary>
-    public int Scores { get; private set; }
+    public int Scores { get; set; }
     /// <summary>
     /// Айпи пользователя
     /// </summary>
-    public string Ip { get; private set; }
+    
+    public string Ip { get; set; }
     /// <summary>
     /// Конструктор
     /// </summary>
@@ -39,13 +40,5 @@ public class User
             }
         }
         return null;
-    }
-    /// <summary>
-    /// Изменение очков у пользователя
-    /// </summary>
-    /// <param name="change">Сумма изменения очков</param>
-    public void ChangeScores(int change)
-    {
-        Scores += change;
     }
 }

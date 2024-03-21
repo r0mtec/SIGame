@@ -1,5 +1,7 @@
-﻿using SGame.PackClass;
+﻿using SGame.AboutUser;
+using SGame.PackClass;
 using System.Text;
+using System.Windows.Forms;
 
 namespace SGame.Forms
 {
@@ -25,12 +27,14 @@ namespace SGame.Forms
 
         private void AddControlsToPanel()
         {
+            /*
             while (panel.Controls.Count > 0)
             {
                 Control control = panel.Controls[0];
                 panel.Controls.Remove(control);
                 control.Dispose();
-            }
+            }*/
+            panel.Controls.Clear();
 
             int numberOfTheme = 0;
             int width = panel.Width;
@@ -73,7 +77,22 @@ namespace SGame.Forms
                 numberOfTheme++;
             }
         }
-
+        private void DisplayUser(List<ConnectedUser> connectedUsers)
+        {
+            panelUsers.Controls.Clear();
+            for (int i = 0; i < connectedUsers.Count; i++)
+            {
+                Label label = new Label();
+                label.Name = "Theme" + connectedUsers[i].User.Name;
+                label.Location = new Point(i * (panelUsers.Width / connectedUsers.Count) + 10, 10);
+                label.Size = new Size(panelUsers.Width/connectedUsers.Count - 20, panelUsers.Height - 20);
+                label.Text = connectedUsers[i].User.Name + "\n" + connectedUsers[i].User.Scores;
+                label.BackColor = Color.Coral;
+                label.Padding = new Padding(6);
+                label.Font = new Font("Arial", 20);
+                panelUsers.Controls.Add(label);
+            }
+        }
         private void ChooseQuestion(QuestionClass question)
         {
             foreach (ThemesClass theme in round.themeClasses)
@@ -128,8 +147,8 @@ namespace SGame.Forms
                     {
                         SendHost("+ 200");
                     }
-                    SendHost("+ 200");
-                    AddControlsToPanel();
+                    else SendHost("+ 200");
+                    
                 };
 
                 panel.Controls.Add(textBox);
@@ -174,22 +193,33 @@ namespace SGame.Forms
         private void InitializeComponent()
         {
             panel = new Panel();
+            panelUsers = new Panel();
             SuspendLayout();
             // 
             // panel
             // 
-            panel.BackColor = SystemColors.Highlight;
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel.BackColor = SystemColors.Highlight;
             panel.Location = new Point(200, 0);
             panel.Name = "panel";
             panel.Size = new Size(1000, 650);
             panel.TabIndex = 0;
+            // 
+            // panelUsers
+            // 
+            panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            panelUsers.BackColor = SystemColors.AppWorkspace;
+            panelUsers.Location = new Point(200, 647);
+            panelUsers.Name = "panelUsers";
+            panelUsers.Size = new Size(1000, 153);
+            panelUsers.TabIndex = 1;
             // 
             // GameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1200, 800);
+            Controls.Add(panelUsers);
             Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.None;
             Name = "GameForm";
@@ -200,5 +230,6 @@ namespace SGame.Forms
         #endregion
 
         private Panel panel;
+        private Panel panelUsers;
     }
 }

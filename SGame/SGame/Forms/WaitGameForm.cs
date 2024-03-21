@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using SGame.PackClass;
+using SignGame;
 
 namespace SGame.Forms
 {
@@ -74,7 +75,7 @@ namespace SGame.Forms
             }
             catch
             {
-                // TO DO: вызывать метод у мэин формы чтобы переносило обратно в форму choseGameFrom
+                mainForm.ChangeForm(new ChoseGameForm(mainForm));
                 return;
             }
 

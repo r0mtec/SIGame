@@ -20,7 +20,7 @@ public partial class GameForm : Form
 {
     TcpClient tcpSocket;
     MainForm mainForm;
-
+    List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
     RoundClass round;
     private List<string> Parse(string otv)
     {
@@ -60,21 +60,21 @@ public partial class GameForm : Form
         tcpSocket = tcpCl;
         round = Round;
         mainForm = parentForm;
-        Listener();
+        
         InitializeComponent();
-        AddControlsToPanel();
+        Listener();
     }
-    private async void SendHost(QuestionClass message) 
+    private void SendHost(QuestionClass message)
     {
         string json = JsonConvert.SerializeObject(message);
         byte[] data = Encoding.UTF8.GetBytes(json);
-        await tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
+        tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
     }
-    private async void SendHost(String str)
+    private void SendHost(String str)
     {
         string json = JsonConvert.SerializeObject(str);
         byte[] data = Encoding.UTF8.GetBytes(json);
-        await tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
+        tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
     }
     private async void Listener()
     {
@@ -100,26 +100,31 @@ public partial class GameForm : Form
 
 
             // Обработка полученных данных, вывод на форму
-            List<string> parseReceivedMessage = null;
+            //List<string> parseReceivedMessage = null;
             string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
             try
             {
-                QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage); 
+                QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage);
                 ChooseQuestion(question);
             }
-            catch 
+            catch
             {
-                parseReceivedMessage = Parse(receivedMessage);
             };
-
-            if (parseReceivedMessage != null && Consist(parseReceivedMessage, new List<string> { "afesersrhrd" }))
+            try
             {
-                //;
+                List<ConnectedUser> connectedUsers = JsonConvert.DeserializeObject<List<ConnectedUser>>(receivedMessage);
+                if (connectedUsers?.Count != 0)
+                {
+                    DisplayUser(connectedUsers);
+                }
+                AddControlsToPanel();
             }
+            catch { };
 
         }
 
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
+
 }

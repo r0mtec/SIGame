@@ -64,7 +64,7 @@ namespace SGame.Forms
         }
         private async void HostGame()
         {
-            if (mainForm.manageUser == null || mainForm.manageUser.User == null) return;
+            if (mainForm?.manageUser == null || mainForm.manageUser.User == null) return;
             string ip = mainForm.manageUser.User.Ip;
             const int port = 8080;
 
@@ -127,7 +127,7 @@ namespace SGame.Forms
                     try 
                     {
                         User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
-                        if (AnwerUser.Name != null)
+                        if (AnwerUser?.Name != null)
                         {
                             // Поиск пользователя в списке
                             int index = connectedUsers.FindIndex(client => client.Client == tcpClient);
@@ -151,7 +151,7 @@ namespace SGame.Forms
                     try
                     {
                         QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(jsonAnswer);
-                        if(question.question != null) 
+                        if(question?.question != null) 
                         {
                             int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                             if (connectedUsers[idClient].isOtv)
@@ -166,13 +166,19 @@ namespace SGame.Forms
                     List<string> parseReceivedMessage = Parse(jsonAnswer);
                     if(Consist(parseReceivedMessage, new List<string> {"+"}))
                     {
-                        BroadcastMessage("afesersrhrd");
+                        int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
+                        if (connectedUsers[idClient].isOtv)
+                        {
+                            connectedUsers[idClient].User.Scores += 5;
+                        }
+                        BroadcastMessage(connectedUsers);
                     }
                 }
                 catch (Exception ex)
                 {
                     // Обработка и вывод ошибок в текстовое поле
                 }
+                BroadcastMessage("мусор");
             }
         }
         private void refresh_label()
@@ -191,12 +197,11 @@ namespace SGame.Forms
             });
         }
 
-        private async void buttonSendMessage_Click(object sender, EventArgs e)
+        private void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedUsers.Count == 0) return;
             BroadcastMessage(MessageTextBox.Text);
         }
-
         private async void BroadcastMessage(string message)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
@@ -256,7 +261,7 @@ namespace SGame.Forms
                 }
                 try
                 {
-                    await client.Client.GetStream().WriteAsync(data, 0, data.Length);
+                    await client.Client.GetStream().WriteAsync(data);
                     //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
                 catch (Exception ex)
@@ -266,15 +271,39 @@ namespace SGame.Forms
             }
             refresh_label();
         }
-        private async void buttonStartGame_Click(object sender, EventArgs e)
+        private async void BroadcastMessage(List<ConnectedUser> message)
+        {
+            string json = JsonConvert.SerializeObject(message);
+            byte[] data = Encoding.UTF8.GetBytes(json);
+
+            foreach (ConnectedUser client in connectedUsers)
+            {
+                if (client.Client == null)
+                {
+                    playersListLabes.Text = "Ошибка, нет пользователя";
+                    continue;
+                }
+                try
+                {
+                    await client.Client.GetStream().WriteAsync(data);
+                    //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    playersListLabes.Text = "Ошибка при отправке данных";
+                }
+            }
+            refresh_label();
+        }
+        private void buttonStartGame_Click(object sender, EventArgs e)
         {
             BroadcastMessage("Start game");
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            round.initRound(new StreamReader("C:\\Users\\busla\\OneDrive\\Рабочий стол\\gaam\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt", 
-                Encoding.GetEncoding(1251)));
+
+            round.initRound(new StreamReader("C:\\Users\\busla\\Desktop\\нирсэ\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
             //round.initRound(new StreamReader("C:\\Users\\busla\\source\\repos\\SIGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt",
             //    Encoding.GetEncoding(1251)));
             BroadcastMessage(round);
+            BroadcastMessage(connectedUsers);
         }
     }
 }

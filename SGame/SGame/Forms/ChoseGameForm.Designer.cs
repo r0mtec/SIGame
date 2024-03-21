@@ -84,7 +84,6 @@
 
         #endregion
 
-        private Label TempName;
         private Button host_but;
         private Button join_but;
         private TextBox IpTextBox;
