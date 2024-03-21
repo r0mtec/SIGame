@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using SGame.PackClass;
 using System.Reflection;
+using System.Threading;
 
 namespace SGame.Forms
 {
@@ -186,7 +187,7 @@ namespace SGame.Forms
                         Random random = new Random();
                         connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
                         BroadcastMessage(connectedUsers);
-                        check();
+                        checkAsync();
                     }
                     else if (Consist(parseReceivedMessage, new List<string> {"+"}))
                     {
@@ -194,7 +195,7 @@ namespace SGame.Forms
                         connectedUsers[idClient].isOtv = true;
                         connectedUsers[idClient].User.Scores += Int32.Parse(parseReceivedMessage[1]);
                         BroadcastMessage(connectedUsers);
-                        check();
+                        checkAsync();
                     }
                     else if(Consist(parseReceivedMessage, new List<string> { "-" }))
                     {
@@ -279,6 +280,7 @@ namespace SGame.Forms
         }
         private async void BroadcastMessage(QuestionClass message)
         {
+            
             string json = JsonConvert.SerializeObject(message);
             byte[] data = Encoding.UTF8.GetBytes(json);
 
@@ -325,7 +327,7 @@ namespace SGame.Forms
             }
             refresh_label();
         }
-        private void check()
+        private async void checkAsync()
         {
             bool next = true;
             foreach (ThemesClass theme in round.themeClasses)
@@ -341,13 +343,13 @@ namespace SGame.Forms
             if (next)
             {
                 if (numberRound >= game.roundClasses.Count) return;
-                BroadcastMessage("мусор");
                 BroadcastMessage(game.roundClasses[numberRound]);
+                await Task.Delay(100);
                 BroadcastMessage(connectedUsers);
                 numberRound++;
             }
         }
-        private void buttonStartGame_Click(object sender, EventArgs e)
+        private async void buttonStartGame_ClickAsync(object sender, EventArgs e)
         {
             BroadcastMessage("Start game");
 
@@ -371,7 +373,9 @@ namespace SGame.Forms
             round = game.roundClasses[numberRound];
             numberRound++;
             BroadcastMessage(round);
+            await Task.Delay(100);
             BroadcastMessage(connectedUsers);
+            BroadcastMessage("мусор");
         }
     }
 }

@@ -128,9 +128,16 @@ namespace SGame.Forms
                     while (true)
                     {
                         // Асинхронное чтение данных от сервера
+                        var rreceivedMessage = new StringBuilder();
                         try
                         {
-                            size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                            do
+                            {
+                                size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                                rreceivedMessage.Append(Encoding.UTF8.GetString(buffer, 0, size));
+                            }
+                            while (tcpSocket.Available > 0);
+                            
                         }
                         catch
                         {
@@ -141,17 +148,14 @@ namespace SGame.Forms
 
 
                         // Обработка полученных данных, вывод на форму
-                        parseReceivedMessage = null;
                         RoundClass Round = null;
-
-                        receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
                         try
                         {
-                            Round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                            Round = JsonConvert.DeserializeObject<RoundClass>(rreceivedMessage.ToString());
                         }
                         catch (Exception)
                         {
-                            parseReceivedMessage = Parse(receivedMessage);
+                            parseReceivedMessage = Parse(rreceivedMessage.ToString());
                         }
 
                         if (Round != null)

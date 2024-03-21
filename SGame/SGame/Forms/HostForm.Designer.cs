@@ -84,7 +84,7 @@
             buttonStartGame.TabIndex = 10;
             buttonStartGame.Text = "Start game";
             buttonStartGame.UseVisualStyleBackColor = true;
-            buttonStartGame.Click += buttonStartGame_Click;
+            buttonStartGame.Click += buttonStartGame_ClickAsync;
             // 
             // HostForm
             // 
