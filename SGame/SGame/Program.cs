@@ -16,7 +16,7 @@ namespace SignGame
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
             SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
-            game.initGame(new StreamReader("C:\\Users\\busla\\Desktop\\нирсэ\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
+            //game.initGame(new StreamReader("C:\\Users\\busla\\Desktop\\нирсэ\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SGame.PackClass
 
         public int? price { get; set; }
 
-        List<String> varinats = new List<String>();
+        public List<String> varinats = new List<String>();
 
         public List<String>? getVariantsAnswer()
         {

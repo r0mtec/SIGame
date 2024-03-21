@@ -20,6 +20,7 @@ public partial class GameForm : Form
 {
     TcpClient tcpSocket;
     MainForm mainForm;
+
     List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
     RoundClass round;
     private List<string> Parse(string otv)
@@ -105,7 +106,7 @@ public partial class GameForm : Form
             try
             {
                 QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage);
-                ChooseQuestion(question);
+                ChooseQuestionAsync(question);
             }
             catch
             {
@@ -118,6 +119,16 @@ public partial class GameForm : Form
                     DisplayUser(connectedUsers);
                 }
                 AddControlsToPanel();
+            }
+            catch { };
+            try
+            {
+                RoundClass round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                if (round.themeClasses.Count != 0)
+                {
+                    mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, round));
+                }
+                
             }
             catch { };
 

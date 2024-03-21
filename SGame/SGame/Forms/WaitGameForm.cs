@@ -149,7 +149,7 @@ namespace SGame.Forms
                         {
                             Round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             parseReceivedMessage = Parse(receivedMessage);
                         }

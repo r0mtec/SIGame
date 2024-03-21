@@ -55,6 +55,8 @@ namespace SGame.Forms
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private MainForm? mainForm;
         RoundClass round = new RoundClass();
+        private int numberRound = 0;
+        SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
         public HostForm(MainForm? parrentForm)
         {
             this.mainForm = parrentForm;
@@ -156,25 +158,53 @@ namespace SGame.Forms
                             int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                             if (connectedUsers[idClient].isOtv)
                             {
-                                question.isUsed = true;
+                                foreach (ThemesClass theme in round.themeClasses)
+                                {
+                                    foreach (var question1 in theme.questionClasses)
+                                    {
+                                        if (question.question == question1.question)
+                                        {
+                                            question1.isUsed = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                connectedUsers[idClient].isOtv = false;
                                 BroadcastMessage(question);
+                            }
+                            else
+                            {
+                                BroadcastMessage("мусор");
                             }
                         }
                         
                     }
                     catch { };
                     List<string> parseReceivedMessage = Parse(jsonAnswer);
-                    if(Consist(parseReceivedMessage, new List<string> {"+"}))
+                    if (Consist(parseReceivedMessage, new List<string> { "+","all" }))
+                    {
+                        Random random = new Random();
+                        connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
+                        BroadcastMessage(connectedUsers);
+                        check();
+                    }
+                    else if (Consist(parseReceivedMessage, new List<string> {"+"}))
                     {
                         int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
-                        if (connectedUsers[idClient].isOtv)
-                        {
-                            connectedUsers[idClient].User.Scores += 5;
-                        }
+                        connectedUsers[idClient].isOtv = true;
+                        connectedUsers[idClient].User.Scores += Int32.Parse(parseReceivedMessage[1]);
                         BroadcastMessage(connectedUsers);
+                        check();
                     }
+                    else if(Consist(parseReceivedMessage, new List<string> { "-" }))
+                    {
+                        int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
+                        connectedUsers[idClient].User.Scores -= Int32.Parse(parseReceivedMessage[1]);
+                        BroadcastMessage("мусор");
+                    }
+
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Обработка и вывод ошибок в текстовое поле
                 }
@@ -217,7 +247,7 @@ namespace SGame.Forms
                 {
                     await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     playersListLabes.Text = "Ошибка при отправке данных";
                 }
@@ -240,7 +270,7 @@ namespace SGame.Forms
                 {
                     await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     playersListLabes.Text = "Ошибка при отправке данных";
                 }
@@ -264,7 +294,7 @@ namespace SGame.Forms
                     await client.Client.GetStream().WriteAsync(data);
                     //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     playersListLabes.Text = "Ошибка при отправке данных";
                 }
@@ -288,20 +318,58 @@ namespace SGame.Forms
                     await client.Client.GetStream().WriteAsync(data);
                     //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     playersListLabes.Text = "Ошибка при отправке данных";
                 }
             }
             refresh_label();
         }
+        private void check()
+        {
+            bool next = true;
+            foreach (ThemesClass theme in round.themeClasses)
+            {
+                foreach (var question1 in theme.questionClasses)
+                {
+                    if (!question1.isUsed)
+                    {
+                        next = false;
+                    }
+                }
+            }
+            if (next)
+            {
+                if (numberRound >= game.roundClasses.Count) return;
+                BroadcastMessage("мусор");
+                BroadcastMessage(game.roundClasses[numberRound]);
+                BroadcastMessage(connectedUsers);
+                numberRound++;
+            }
+        }
         private void buttonStartGame_Click(object sender, EventArgs e)
         {
             BroadcastMessage("Start game");
 
-            round.initRound(new StreamReader("C:\\Users\\busla\\Desktop\\нирсэ\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
-            //round.initRound(new StreamReader("C:\\Users\\busla\\source\\repos\\SIGame\\SGame\\SGame\\PackClass\\Data\\TestFileQuestionRead.txt",
-            //    Encoding.GetEncoding(1251)));
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = "C:\\Users";
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    game.initGame(reader);
+                }
+            }
+            else return;
+
+            Random random = new Random();
+            connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
+            round = game.roundClasses[numberRound];
+            numberRound++;
             BroadcastMessage(round);
             BroadcastMessage(connectedUsers);
         }
