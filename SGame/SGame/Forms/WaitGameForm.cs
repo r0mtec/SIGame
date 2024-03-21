@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using SGame.PackClass;
+using SignGame;
 
 namespace SGame.Forms
 {
@@ -74,7 +75,7 @@ namespace SGame.Forms
             }
             catch
             {
-                // TO DO: вызывать метод у мэин формы чтобы переносило обратно в форму choseGameFrom
+                mainForm.ChangeForm(new ChoseGameForm(mainForm));
                 return;
             }
 
@@ -120,20 +121,23 @@ namespace SGame.Forms
                 List<string> parseReceivedMessage = Parse(receivedMessage);
                 if (Consist(parseReceivedMessage, new List<string> { "count" }))
                 {
-                    countPlayersLabel.Invoke((MethodInvoker)delegate
-                    {
-                        countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
-                    });
-                    
+                    countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
                 }
                 else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
                 {
                     while (true)
                     {
                         // Асинхронное чтение данных от сервера
+                        var rreceivedMessage = new StringBuilder();
                         try
                         {
-                            size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                            do
+                            {
+                                size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                                rreceivedMessage.Append(Encoding.UTF8.GetString(buffer, 0, size));
+                            }
+                            while (tcpSocket.Available > 0);
+                            
                         }
                         catch
                         {
@@ -144,42 +148,25 @@ namespace SGame.Forms
 
 
                         // Обработка полученных данных, вывод на форму
-                        parseReceivedMessage = null;
                         RoundClass Round = null;
-
-                        receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
                         try
                         {
-                            Round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                            Round = JsonConvert.DeserializeObject<RoundClass>(rreceivedMessage.ToString());
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            parseReceivedMessage = Parse(receivedMessage);
+                            parseReceivedMessage = Parse(rreceivedMessage.ToString());
                         }
 
                         if (Round != null)
                         {
-                            mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint, Round));
+                            //tcpSocket.Close();
+                            mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, Round));
+
                         }
                     }
-
                     break;
-                }
-                else if (receivedMessage == "Прибавить всем баллы")
-                {
-                    mainForm.manageUser.User.ChangeScores(5);
-                    json = JsonConvert.SerializeObject(mainForm.manageUser.User);
-                    message = Encoding.UTF8.GetBytes(json);
-                    await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
-                    
-                }
-                else
-                {
-                    messageLabel.Invoke((MethodInvoker)delegate
-                    {
-                        messageLabel.Text = receivedMessage;
-                    });
-                }
+                };
             }
 
             // Завершаем соединение и закрываем сокет

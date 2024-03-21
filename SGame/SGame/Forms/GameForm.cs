@@ -18,15 +18,16 @@ namespace SGame.Forms;
 
 public partial class GameForm : Form
 {
-    private IPEndPoint tcpEndPoint;
-    
+    TcpClient tcpSocket;
     MainForm mainForm;
 
+    List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
     RoundClass round;
     private List<string> Parse(string otv)
     {
         List<string> words = new List<string>();
         string temp = "";
+        otv += " ";
         for (int i = 0; i < otv.Length; i++)
         {
             if (otv[i] == ' ')
@@ -36,7 +37,6 @@ public partial class GameForm : Form
             }
             else temp += otv[i];
         }
-        words.Add(temp);
         return words;
     }
     private bool Consist(List<string> words, List<string> wordToFind)
@@ -56,31 +56,29 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
+    public GameForm(MainForm parentForm, TcpClient tcpCl, RoundClass Round)
     {
-        tcpEndPoint = tcpEP;
+        tcpSocket = tcpCl;
         round = Round;
         mainForm = parentForm;
+        
+        InitializeComponent();
         Listener();
-        InitializeComponent(round);
+    }
+    private void SendHost(QuestionClass message)
+    {
+        string json = JsonConvert.SerializeObject(message);
+        byte[] data = Encoding.UTF8.GetBytes(json);
+        tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
+    }
+    private void SendHost(String str)
+    {
+        string json = JsonConvert.SerializeObject(str);
+        byte[] data = Encoding.UTF8.GetBytes(json);
+        tcpSocket.GetStream().WriteAsync(data, 0, data.Length);
     }
     private async void Listener()
     {
-
-        // Создаем новый сокет для обмена данными
-        var tcpSocket = new TcpClient();
-
-        // Сериализуем объект пользователя в формат JSON
-        string json = JsonConvert.SerializeObject(mainForm.manageUser.User);
-
-        // Преобразуем JSON-строку в массив байт
-        var message = Encoding.UTF8.GetBytes(json);
-
-        // Асинхронное подключение к серверу
-        await tcpSocket.ConnectAsync(tcpEndPoint);
-
-        // Отправка данных на сервер
-        await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
 
         // Буфер для приема данных от сервера
         var buffer = new byte[65536];
@@ -103,13 +101,41 @@ public partial class GameForm : Form
 
 
             // Обработка полученных данных, вывод на форму
-            List<string> parseReceivedMessage = null;
-
+            //List<string> parseReceivedMessage = null;
             string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
-            parseReceivedMessage = Parse(receivedMessage);
+            try
+            {
+                QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage);
+                ChooseQuestionAsync(question);
+            }
+            catch
+            {
+            };
+            try
+            {
+                List<ConnectedUser> connectedUsers = JsonConvert.DeserializeObject<List<ConnectedUser>>(receivedMessage);
+                if (connectedUsers?.Count != 0)
+                {
+                    DisplayUser(connectedUsers);
+                }
+                AddControlsToPanel();
+            }
+            catch { };
+            try
+            {
+                RoundClass round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                if (round.themeClasses.Count != 0)
+                {
+                    mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, round));
+                }
+                
+            }
+            catch { };
+
         }
 
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
+
 }
