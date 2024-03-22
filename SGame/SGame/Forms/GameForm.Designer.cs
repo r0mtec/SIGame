@@ -278,18 +278,18 @@ namespace SGame.Forms
             // 
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel.BackColor = SystemColors.Highlight;
-            panel.Location = new Point(200, 0);
+            panel.Location = new Point(0, 0);
             panel.Name = "panel";
-            panel.Size = new Size(1000, 650);
+            panel.Size = new Size(1200, 650);
             panel.TabIndex = 0;
             // 
             // panelUsers
             // 
             panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             panelUsers.BackColor = SystemColors.AppWorkspace;
-            panelUsers.Location = new Point(200, 647);
+            panelUsers.Location = new Point(0, 647);
             panelUsers.Name = "panelUsers";
-            panelUsers.Size = new Size(1000, 153);
+            panelUsers.Size = new Size(1200, 153);
             panelUsers.TabIndex = 1;
             // 
             // GameForm

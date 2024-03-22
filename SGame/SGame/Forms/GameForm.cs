@@ -123,10 +123,11 @@ public partial class GameForm : Form
             catch { };
             try
             {
-                RoundClass round = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
-                if (round.themeClasses.Count != 0)
+                RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                if (rround.themeClasses.Count != 0)
                 {
-                    mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, round));
+                    round = rround;
+                    AddControlsToPanel();
                 }
                 
             }

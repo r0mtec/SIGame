@@ -227,11 +227,26 @@ namespace SGame.Forms
                 playersListLabes.Text = s;
             });
         }
-
+        async void NextRound()
+        {
+            //BroadcastMessage("мусор");
+            round = game.roundClasses[numberRound];
+            BroadcastMessage(round);
+            await Task.Delay(200);
+            BroadcastMessage("мусор");
+            BroadcastMessage(connectedUsers);
+            await Task.Delay(200);
+            BroadcastMessage("мусор");
+            numberRound++;
+        }
         private void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedUsers.Count == 0) return;
-            BroadcastMessage(MessageTextBox.Text);
+            if(MessageTextBox.Text == "skip") 
+            {
+                NextRound();
+            }
+            else BroadcastMessage(MessageTextBox.Text);
         }
         private async void BroadcastMessage(string message)
         {
@@ -343,13 +358,7 @@ namespace SGame.Forms
             if (next)
             {
                 if (numberRound >= game.roundClasses.Count) return;
-                BroadcastMessage("мусор");
-                round = game.roundClasses[numberRound];
-                BroadcastMessage(round);
-                await Task.Delay(500);
-                BroadcastMessage(connectedUsers);
-                BroadcastMessage("мусор");
-                numberRound++;
+                NextRound();
             }
         }
         private async void buttonStartGame_ClickAsync(object sender, EventArgs e)
