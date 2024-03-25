@@ -48,8 +48,8 @@
             // 
             // text_name
             // 
-            text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            text_name.Font = new Font("Arial Narrow", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            text_name.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            text_name.Font = new Font("Arial Narrow", 12F);
             text_name.Location = new Point(338, 147);
             text_name.Name = "text_name";
             text_name.PlaceholderText = "Введите никнейм";

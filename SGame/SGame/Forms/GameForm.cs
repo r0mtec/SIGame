@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -61,7 +62,7 @@ public partial class GameForm : Form
         tcpSocket = tcpCl;
         round = Round;
         mainForm = parentForm;
-        
+
         InitializeComponent();
         Listener();
     }
@@ -87,26 +88,38 @@ public partial class GameForm : Form
         // Цикл для ожидания новых сообщений от сервера
         while (true)
         {
-            // Асинхронное чтение данных от сервера
+            NetworkStream stream = tcpSocket.GetStream();
+            string receivedMessage = "";
+            Byte[] readingData = new Byte[65536];
+            StringBuilder completeMessage = new StringBuilder();
+            int numberOfBytesRead = 0;
+            do
+            {
+                numberOfBytesRead = await stream.ReadAsync(readingData, 0, readingData.Length);
+                completeMessage.AppendFormat("{0}", Encoding.UTF8.GetString(readingData, 0, numberOfBytesRead));
+            }
+            while (stream.DataAvailable);
+            receivedMessage = completeMessage.ToString();
             try
             {
-                size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                if (rround != null && rround?.themeClasses.Count != 0)
+                {
+                    round = rround;
+                    AddControlsToPanel();
+                    continue;
+                }
+
             }
-            catch
-            {
-                break;
-            }
-
-            if (size == 0) break;
-
-
-            // Обработка полученных данных, вывод на форму
-            //List<string> parseReceivedMessage = null;
-            string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
+            catch { };
             try
             {
                 QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage);
-                ChooseQuestionAsync(question);
+                if (question != null)
+                {
+                    ChooseQuestionAsync(question);
+                    continue;
+                }
             }
             catch
             {
@@ -114,24 +127,16 @@ public partial class GameForm : Form
             try
             {
                 List<ConnectedUser> connectedUsers = JsonConvert.DeserializeObject<List<ConnectedUser>>(receivedMessage);
-                if (connectedUsers?.Count != 0)
+                if (connectedUsers != null && connectedUsers?.Count != 0)
                 {
                     DisplayUser(connectedUsers);
-                }
-                AddControlsToPanel();
-            }
-            catch { };
-            try
-            {
-                RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
-                if (rround.themeClasses.Count != 0)
-                {
-                    round = rround;
+                    cancellationTokenSource?.Cancel();
                     AddControlsToPanel();
+                    continue;
                 }
-                
             }
             catch { };
+
 
         }
 

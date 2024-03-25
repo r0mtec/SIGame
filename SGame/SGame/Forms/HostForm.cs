@@ -229,11 +229,14 @@ namespace SGame.Forms
         }
         async void NextRound()
         {
-            //BroadcastMessage("мусор");
+            BroadcastMessage("мусор");
+            await Task.Delay(200);
             round = game.roundClasses[numberRound];
+            BroadcastMessage(round);
             BroadcastMessage(round);
             await Task.Delay(200);
             BroadcastMessage("мусор");
+            await Task.Delay(200);
             BroadcastMessage(connectedUsers);
             await Task.Delay(200);
             BroadcastMessage("мусор");
@@ -265,7 +268,7 @@ namespace SGame.Forms
                 }
                 catch (Exception)
                 {
-                    playersListLabes.Text = "Ошибка при отправке данных";
+                    
                 }
             }
             refresh_label();
@@ -384,9 +387,13 @@ namespace SGame.Forms
             connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
             round = game.roundClasses[numberRound];
             numberRound++;
+            BroadcastMessage("мусор");
+            await Task.Delay(500);
+            BroadcastMessage(round);
             BroadcastMessage(round);
             await Task.Delay(100);
             BroadcastMessage(connectedUsers);
+            await Task.Delay(100);
             BroadcastMessage("мусор");
         }
     }
