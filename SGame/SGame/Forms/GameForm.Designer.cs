@@ -278,6 +278,7 @@ namespace SGame.Forms
             // 
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel.BackColor = SystemColors.Highlight;
+            panel.BackgroundImageLayout = ImageLayout.Center;
             panel.Location = new Point(200, 0);
             panel.Name = "panel";
             panel.Size = new Size(1000, 650);
@@ -287,6 +288,7 @@ namespace SGame.Forms
             // 
             panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             panelUsers.BackColor = SystemColors.AppWorkspace;
+            panelUsers.BackgroundImageLayout = ImageLayout.Center;
             panelUsers.Location = new Point(200, 647);
             panelUsers.Name = "panelUsers";
             panelUsers.Size = new Size(1000, 153);
@@ -296,6 +298,7 @@ namespace SGame.Forms
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             Controls.Add(panelUsers);
             Controls.Add(panel);

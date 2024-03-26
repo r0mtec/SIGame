@@ -19,7 +19,7 @@ namespace SGame.Forms;
 public partial class GameForm : Form
 {
     TcpClient tcpSocket;
-    MainForm mainForm;
+    SIGame mainForm;
 
     List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
     RoundClass round;
@@ -56,7 +56,7 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, TcpClient tcpCl, RoundClass Round)
+    public GameForm(SIGame parentForm, TcpClient tcpCl, RoundClass Round)
     {
         tcpSocket = tcpCl;
         round = Round;

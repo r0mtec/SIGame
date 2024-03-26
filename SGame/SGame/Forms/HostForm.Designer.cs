@@ -38,7 +38,7 @@
             // ipLabel
             // 
             ipLabel.AutoSize = true;
-            ipLabel.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point);
+            ipLabel.Font = new Font("Segoe UI", 21.75F);
             ipLabel.Location = new Point(254, 58);
             ipLabel.Name = "ipLabel";
             ipLabel.Size = new Size(41, 40);
@@ -48,7 +48,7 @@
             // MessageTextBox
             // 
             MessageTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            MessageTextBox.Font = new Font("Arial Narrow", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            MessageTextBox.Font = new Font("Arial Narrow", 12F);
             MessageTextBox.Location = new Point(211, 199);
             MessageTextBox.Name = "MessageTextBox";
             MessageTextBox.PlaceholderText = "Введите сообщение";
@@ -69,7 +69,7 @@
             // 
             playersListLabes.AutoEllipsis = true;
             playersListLabes.BackColor = Color.Transparent;
-            playersListLabes.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            playersListLabes.Font = new Font("Segoe UI", 14.25F);
             playersListLabes.ForeColor = SystemColors.ActiveCaptionText;
             playersListLabes.Location = new Point(93, 249);
             playersListLabes.Name = "playersListLabes";
@@ -90,6 +90,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             Controls.Add(buttonStartGame);
             Controls.Add(playersListLabes);

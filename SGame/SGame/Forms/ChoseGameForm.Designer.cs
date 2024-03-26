@@ -36,9 +36,10 @@
             // 
             // host_but
             // 
+            host_but.AutoSize = true;
             host_but.Location = new Point(289, 137);
             host_but.Name = "host_but";
-            host_but.Size = new Size(208, 50);
+            host_but.Size = new Size(208, 60);
             host_but.TabIndex = 1;
             host_but.Text = "Хостануть игру";
             host_but.UseVisualStyleBackColor = true;
@@ -46,6 +47,7 @@
             // 
             // join_but
             // 
+            join_but.AutoSize = true;
             join_but.Location = new Point(289, 310);
             join_but.Name = "join_but";
             join_but.Size = new Size(208, 50);
@@ -57,7 +59,7 @@
             // IpTextBox
             // 
             IpTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            IpTextBox.Font = new Font("Arial Narrow", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            IpTextBox.Font = new Font("Arial Narrow", 12F);
             IpTextBox.Location = new Point(330, 366);
             IpTextBox.Name = "IpTextBox";
             IpTextBox.PlaceholderText = "Введите ip";
@@ -68,16 +70,19 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
             BackColor = SystemColors.Highlight;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            BackgroundImageLayout = ImageLayout.Stretch;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(800, 450);
             Controls.Add(IpTextBox);
             Controls.Add(join_but);
             Controls.Add(host_but);
             FormBorderStyle = FormBorderStyle.None;
             Name = "ChoseGameForm";
+            StartPosition = FormStartPosition.Manual;
             Text = "ChoseGame";
+            SizeChanged += ChoseGameForm_SizeChanged;
             ResumeLayout(false);
             PerformLayout();
         }
