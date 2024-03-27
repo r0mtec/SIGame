@@ -17,14 +17,28 @@ namespace SignGame
 {
     public partial class ChoseGameForm : Form
     {
+
+        private Rectangle join_butRectangle;
+
+        private Rectangle IpTextBoxRectangle;
+
+        private Rectangle host_butRectangle;
+
+        private Rectangle originalChoseGameSize;
+
         /// <summary>
         /// Поле-обьект для работы с пользователем
         /// </summary>
-        private MainForm? mainForm;
-        public ChoseGameForm(MainForm parrentForm)
+        private SIGame? mainForm;
+        public ChoseGameForm(SIGame parrentForm)
         {
             InitializeComponent();
             mainForm = parrentForm;
+
+            originalChoseGameSize = new Rectangle(this.Location.X, this.Location.Y, this.Width, this.Height);
+            join_butRectangle = new Rectangle(join_but.Location.X, join_but.Location.Y, join_but.Width, join_but.Height);
+            host_butRectangle = new Rectangle(host_but.Location.X, host_but.Location.Y, host_but.Width, host_but.Height);
+            IpTextBoxRectangle = new Rectangle(IpTextBox.Location.X, IpTextBox.Location.Y, IpTextBox.Width, IpTextBox.Height);
         }
 
         /// <summary>
@@ -82,7 +96,7 @@ namespace SignGame
 
 
 
-        
+
         private void join_but_Click(object sender, EventArgs e)
         {
 
@@ -92,8 +106,32 @@ namespace SignGame
                 return;
             }
             mainForm?.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
-            
+
+        }
+
+        protected void resizeControl(Rectangle r, Control c)
+        {
+            float xRatio = (float)(this.Width) / (float)(originalChoseGameSize.Width);
+            float yRatio = (float)(this.Height) / (float)(originalChoseGameSize.Height);
+
+            int newX = (int)(r.Location.X * xRatio);
+            int newY = (int)(r.Location.Y * yRatio);
+
+            int newWidth = (int)(r.Width * xRatio);
+            int newHeight = (int)(r.Height * yRatio);
+
+
+
+            c.Location = new Point(newX, newY);
+            c.Size = new Size(newWidth, newHeight);
+        }
+
+        private void ChoseGameForm_SizeChanged(object sender, EventArgs e)
+        {
+            resizeControl(join_butRectangle, join_but);
+            resizeControl(host_butRectangle, host_but);
+            resizeControl(IpTextBoxRectangle, IpTextBox);
         }
     }
-       
+
 }

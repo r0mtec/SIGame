@@ -290,6 +290,7 @@ namespace SGame.Forms
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
             Controls.Add(panelUsers);
             Controls.Add(panel);

@@ -20,8 +20,8 @@ namespace SGame.Forms
 {
     public partial class WaitGameForm : Form
     {
-        private MainForm? mainForm;
-        public WaitGameForm(MainForm parentForm, string connectingIp)
+        private SIGame? mainForm;
+        public WaitGameForm(SIGame parentForm, string connectingIp)
         {
             this.mainForm = parentForm;
             InitializeComponent();

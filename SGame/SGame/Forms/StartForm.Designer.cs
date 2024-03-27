@@ -36,11 +36,13 @@
             // 
             // create_button
             // 
-            create_button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            create_button.Anchor = AnchorStyles.None;
             create_button.AutoSize = true;
             create_button.Location = new Point(338, 205);
+            create_button.MaximumSize = new Size(260, 170);
+            create_button.MinimumSize = new Size(130, 50);
             create_button.Name = "create_button";
-            create_button.Size = new Size(130, 39);
+            create_button.Size = new Size(260, 50);
             create_button.TabIndex = 0;
             create_button.Text = "Войти";
             create_button.UseVisualStyleBackColor = true;
@@ -48,17 +50,21 @@
             // 
             // text_name
             // 
-            text_name.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            text_name.Anchor = AnchorStyles.Left;
             text_name.Font = new Font("Arial Narrow", 12F);
-            text_name.Location = new Point(338, 147);
+            text_name.Location = new Point(342, 147);
+            text_name.MaximumSize = new Size(240, 155);
+            text_name.MinimumSize = new Size(126, 32);
             text_name.Name = "text_name";
-            text_name.PlaceholderText = "Введите никнейм";
-            text_name.Size = new Size(130, 26);
+            text_name.PlaceholderText = "Введите ваш никнейм";
+            text_name.Size = new Size(240, 32);
             text_name.TabIndex = 1;
             // 
             // panel1
             // 
+            panel1.AutoSize = true;
             panel1.BackColor = SystemColors.ActiveCaption;
+            panel1.BackgroundImageLayout = ImageLayout.Center;
             panel1.Controls.Add(create_button);
             panel1.Controls.Add(text_name);
             panel1.Dock = DockStyle.Fill;
@@ -75,11 +81,16 @@
             ClientSize = new Size(800, 450);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            MaximumSize = new Size(1920, 1080);
+            MinimumSize = new Size(800, 450);
             Name = "StartForm";
+            StartPosition = FormStartPosition.Manual;
             Text = "Main";
+            SizeChanged += StartForm_SizeChanged;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

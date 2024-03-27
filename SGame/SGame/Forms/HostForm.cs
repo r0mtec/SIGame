@@ -54,12 +54,12 @@ namespace SGame.Forms
             return count == 0;
         }
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
-        private MainForm? mainForm;
+        private SIGame? mainForm;
         RoundClass round = new RoundClass();
         private int numberRound = 0;
         bool roundStart = false;
         SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
-        public HostForm(MainForm? parrentForm)
+        public HostForm(SIGame? parrentForm)
         {
             this.mainForm = parrentForm;
             InitializeComponent();
