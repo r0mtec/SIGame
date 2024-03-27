@@ -160,17 +160,14 @@ namespace SGame.Forms
 
                         if (Round != null)
                         {
-                            //tcpSocket.Close();
-                            mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, Round));
+                            tcpSocket.Close();
+                            mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint, Round));
 
                         }
                     }
                     break;
                 };
             }
-
-            // Завершаем соединение и закрываем сокет
-            tcpSocket.Close();
         }
     }
 }

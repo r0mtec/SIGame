@@ -19,10 +19,11 @@ namespace SGame.Forms;
 
 public partial class GameForm : Form
 {
-    TcpClient tcpSocket;
+    IPEndPoint tcpEndPoint;
     MainForm mainForm;
+    TcpClient tcpSocket;
 
-    List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
+    List<ConnectedUser> connectedUsersOwn = new List<ConnectedUser>();
     RoundClass round;
     private List<string> Parse(string otv)
     {
@@ -57,11 +58,12 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, TcpClient tcpCl, RoundClass Round)
+    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
     {
-        tcpSocket = tcpCl;
+        tcpEndPoint = tcpEP;
         round = Round;
         mainForm = parentForm;
+
 
         InitializeComponent();
         Listener();
@@ -80,7 +82,15 @@ public partial class GameForm : Form
     }
     private async void Listener()
     {
+        tcpSocket = new TcpClient();
+        await tcpSocket.ConnectAsync(tcpEndPoint);
 
+        string json = JsonConvert.SerializeObject(mainForm.manageUser.User);
+
+        // Преобразуем JSON-строку в массив байт
+        var message = Encoding.UTF8.GetBytes(json);
+
+        await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
         // Буфер для приема данных от сервера
         var buffer = new byte[65536];
         var size = 0;
@@ -88,18 +98,24 @@ public partial class GameForm : Form
         // Цикл для ожидания новых сообщений от сервера
         while (true)
         {
-            NetworkStream stream = tcpSocket.GetStream();
-            string receivedMessage = "";
-            Byte[] readingData = new Byte[65536];
-            StringBuilder completeMessage = new StringBuilder();
-            int numberOfBytesRead = 0;
-            do
+            var rreceivedMessage = new StringBuilder();
+            try
             {
-                numberOfBytesRead = await stream.ReadAsync(readingData, 0, readingData.Length);
-                completeMessage.AppendFormat("{0}", Encoding.UTF8.GetString(readingData, 0, numberOfBytesRead));
+                do
+                {
+                    size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                    rreceivedMessage.Append(Encoding.UTF8.GetString(buffer, 0, size));
+                }
+                while (tcpSocket.Available > 0);
+
             }
-            while (stream.DataAvailable);
-            receivedMessage = completeMessage.ToString();
+            catch
+            {
+                break;
+            }
+
+            if (size == 0) break;
+            string receivedMessage = rreceivedMessage.ToString();
             try
             {
                 RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
@@ -129,6 +145,7 @@ public partial class GameForm : Form
                 List<ConnectedUser> connectedUsers = JsonConvert.DeserializeObject<List<ConnectedUser>>(receivedMessage);
                 if (connectedUsers != null && connectedUsers?.Count != 0)
                 {
+                    connectedUsersOwn = connectedUsers;
                     DisplayUser(connectedUsers);
                     cancellationTokenSource?.Cancel();
                     AddControlsToPanel();
@@ -143,5 +160,4 @@ public partial class GameForm : Form
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
-
 }
