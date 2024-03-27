@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -18,10 +19,11 @@ namespace SGame.Forms;
 
 public partial class GameForm : Form
 {
+    IPEndPoint tcpEndPoint;
+    MainForm mainForm;
     TcpClient tcpSocket;
-    SIGame mainForm;
 
-    List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
+    List<ConnectedUser> connectedUsersOwn = new List<ConnectedUser>();
     RoundClass round;
     private List<string> Parse(string otv)
     {
@@ -56,12 +58,13 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(SIGame parentForm, TcpClient tcpCl, RoundClass Round)
+    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
     {
-        tcpSocket = tcpCl;
+        tcpEndPoint = tcpEP;
         round = Round;
         mainForm = parentForm;
-        
+
+
         InitializeComponent();
         Listener();
     }
@@ -79,7 +82,15 @@ public partial class GameForm : Form
     }
     private async void Listener()
     {
+        tcpSocket = new TcpClient();
+        await tcpSocket.ConnectAsync(tcpEndPoint);
 
+        string json = JsonConvert.SerializeObject(mainForm.manageUser.User);
+
+        // Преобразуем JSON-строку в массив байт
+        var message = Encoding.UTF8.GetBytes(json);
+
+        await tcpSocket.GetStream().WriteAsync(message, 0, message.Length);
         // Буфер для приема данных от сервера
         var buffer = new byte[65536];
         var size = 0;
@@ -87,10 +98,16 @@ public partial class GameForm : Form
         // Цикл для ожидания новых сообщений от сервера
         while (true)
         {
-            // Асинхронное чтение данных от сервера
+            var rreceivedMessage = new StringBuilder();
             try
             {
-                size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                do
+                {
+                    size = await tcpSocket.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                    rreceivedMessage.Append(Encoding.UTF8.GetString(buffer, 0, size));
+                }
+                while (tcpSocket.Available > 0);
+
             }
             catch
             {
@@ -98,15 +115,27 @@ public partial class GameForm : Form
             }
 
             if (size == 0) break;
+            string receivedMessage = rreceivedMessage.ToString();
+            try
+            {
+                RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
+                if (rround != null && rround?.themeClasses.Count != 0)
+                {
+                    round = rround;
+                    AddControlsToPanel();
+                    continue;
+                }
 
-
-            // Обработка полученных данных, вывод на форму
-            //List<string> parseReceivedMessage = null;
-            string receivedMessage = Encoding.UTF8.GetString(buffer, 0, size);
+            }
+            catch { };
             try
             {
                 QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(receivedMessage);
-                ChooseQuestionAsync(question);
+                if (question != null)
+                {
+                    ChooseQuestionAsync(question);
+                    continue;
+                }
             }
             catch
             {
@@ -114,29 +143,21 @@ public partial class GameForm : Form
             try
             {
                 List<ConnectedUser> connectedUsers = JsonConvert.DeserializeObject<List<ConnectedUser>>(receivedMessage);
-                if (connectedUsers?.Count != 0)
+                if (connectedUsers != null && connectedUsers?.Count != 0)
                 {
+                    connectedUsersOwn = connectedUsers;
                     DisplayUser(connectedUsers);
-                }
-                AddControlsToPanel();
-            }
-            catch { };
-            try
-            {
-                RoundClass rround = JsonConvert.DeserializeObject<RoundClass>(receivedMessage);
-                if (rround.themeClasses.Count != 0)
-                {
-                    round = rround;
+                    cancellationTokenSource?.Cancel();
                     AddControlsToPanel();
+                    continue;
                 }
-                
             }
             catch { };
+
 
         }
 
         // Завершаем соединение и закрываем сокет
         tcpSocket.Close();
     }
-
 }

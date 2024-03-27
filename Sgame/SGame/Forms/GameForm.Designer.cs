@@ -18,7 +18,7 @@ namespace SGame.Forms
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        private bool timer = false;
+        private bool is_question = false;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -78,15 +78,8 @@ namespace SGame.Forms
         
         private void AddControlsToPanel()
         {
-            /*
-            while (panel.Controls.Count > 0)
-            {
-                Control control = panel.Controls[0];
-                panel.Controls.Remove(control);
-                control.Dispose();
-            }*/
             panel.Controls.Clear();
-
+            is_question = false;
             int numberOfTheme = 0;
             int width = panel.Width;
             int height = panel.Height;
@@ -209,6 +202,7 @@ namespace SGame.Forms
                 button.UseVisualStyleBackColor = true;
                 button.Click += (sender, e) =>
                 {
+                    is_question = true;
                     foreach (Control control in panel.Controls)
                     {
                         if (control is Button)
@@ -276,20 +270,20 @@ namespace SGame.Forms
             // 
             // panel
             // 
-            panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel.BackColor = SystemColors.Highlight;
-            panel.Location = new Point(200, 0);
+            panel.Location = new Point(0, 0);
             panel.Name = "panel";
-            panel.Size = new Size(1000, 650);
+            panel.Size = new Size(1200, 604);
             panel.TabIndex = 0;
             // 
             // panelUsers
             // 
-            panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelUsers.BackColor = SystemColors.AppWorkspace;
-            panelUsers.Location = new Point(200, 647);
+            panelUsers.Location = new Point(0, 602);
             panelUsers.Name = "panelUsers";
-            panelUsers.Size = new Size(1000, 153);
+            panelUsers.Size = new Size(1200, 198);
             panelUsers.TabIndex = 1;
             // 
             // GameForm
@@ -302,7 +296,18 @@ namespace SGame.Forms
             FormBorderStyle = FormBorderStyle.None;
             Name = "GameForm";
             Text = "Game";
+            Resize += GameForm_Resize1;
             ResumeLayout(false);
+        }
+
+        private void GameForm_Resize1(object sender, EventArgs e)
+        {
+            if (!is_question)
+            {
+                AddControlsToPanel();
+                DisplayUser(connectedUsersOwn);
+            }
+            
         }
 
         #endregion
