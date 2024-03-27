@@ -20,7 +20,7 @@ namespace SGame.Forms;
 public partial class GameForm : Form
 {
     IPEndPoint tcpEndPoint;
-    MainForm mainForm;
+    SIGame? mainForm;
     TcpClient tcpSocket;
 
     List<ConnectedUser> connectedUsersOwn = new List<ConnectedUser>();
@@ -58,7 +58,7 @@ public partial class GameForm : Form
         }
         return count == 0;
     }
-    public GameForm(MainForm parentForm, IPEndPoint tcpEP, RoundClass Round)
+    public GameForm(SIGame? parentForm, IPEndPoint tcpEP, RoundClass Round)
     {
         tcpEndPoint = tcpEP;
         round = Round;
