@@ -46,6 +46,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1200, 800);
             Controls.Add(panel);
+            DoubleBuffered = true;
             Name = "SIGame";
             Text = "Main";
             ResumeLayout(false);

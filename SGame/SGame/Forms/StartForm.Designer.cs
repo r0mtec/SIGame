@@ -1,4 +1,6 @@
-﻿namespace SignGame
+﻿using System.Windows.Forms;
+
+namespace SignGame
 {
     partial class StartForm
     {
@@ -50,19 +52,21 @@
             panel1.Location = new Point(0, 0);
             panel1.MinimumSize = new Size(950, 550);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1452, 715);
+            panel1.Size = new Size(950, 550);
             panel1.TabIndex = 2;
             panel1.Paint += panel1_Paint;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.BackgroundImage = SGame.Properties.Resources.background;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.MinimumSize = new Size(0, 450);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -71,18 +75,20 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(1452, 715);
+            tableLayoutPanel1.Size = new Size(950, 550);
             tableLayoutPanel1.TabIndex = 2;
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.BackColor = Color.WhiteSmoke;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(create_button, 0, 1);
             tableLayoutPanel2.Controls.Add(text_name, 0, 0);
-            tableLayoutPanel2.Location = new Point(465, 296);
+            tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tableLayoutPanel2.Location = new Point(315, 230);
             tableLayoutPanel2.Margin = new Padding(30, 10, 30, 60);
             tableLayoutPanel2.MaximumSize = new Size(520, 220);
             tableLayoutPanel2.MinimumSize = new Size(0, 182);
@@ -90,7 +96,7 @@
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(520, 216);
+            tableLayoutPanel2.Size = new Size(320, 182);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // create_button
@@ -98,13 +104,13 @@
             create_button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             create_button.AutoSize = true;
             create_button.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            create_button.Location = new Point(70, 113);
-            create_button.Margin = new Padding(70, 5, 25, 30);
+            create_button.Location = new Point(45, 96);
+            create_button.Margin = new Padding(45, 5, 25, 30);
             create_button.MaximumSize = new Size(500, 490);
             create_button.MinimumSize = new Size(130, 80);
             create_button.Name = "create_button";
             create_button.RightToLeft = RightToLeft.Yes;
-            create_button.Size = new Size(425, 80);
+            create_button.Size = new Size(250, 80);
             create_button.TabIndex = 0;
             create_button.Text = "Войти";
             create_button.UseVisualStyleBackColor = true;
@@ -114,13 +120,13 @@
             // 
             text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             text_name.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            text_name.Location = new Point(80, 48);
-            text_name.Margin = new Padding(80, 30, 30, 20);
+            text_name.Location = new Point(50, 31);
+            text_name.Margin = new Padding(50, 30, 30, 20);
             text_name.MaximumSize = new Size(480, 490);
             text_name.MinimumSize = new Size(120, 40);
             text_name.Name = "text_name";
             text_name.PlaceholderText = "Введите ваш никнейм";
-            text_name.Size = new Size(410, 40);
+            text_name.Size = new Size(240, 40);
             text_name.TabIndex = 1;
             // 
             // fileSystemWatcher1
@@ -132,8 +138,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1452, 715);
+            BackgroundImageLayout = ImageLayout.Center;
+            ClientSize = new Size(950, 550);
             Controls.Add(panel1);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             MaximumSize = new Size(1920, 1080);
             MinimumSize = new Size(950, 550);

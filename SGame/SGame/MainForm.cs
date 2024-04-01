@@ -54,6 +54,8 @@ namespace SGame
         {
             InitializeComponent();
             ChangeForm(new StartForm(this));
+            this.SuspendLayout();
+            this.ResumeLayout(false);
         }
 
         

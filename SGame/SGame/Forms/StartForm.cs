@@ -35,11 +35,12 @@ namespace SignGame
             
             InitializeComponent();
             mainForm = parrentForm;
+            this.SuspendLayout();
+            this.ResumeLayout(false);
 
-           
 
 
-         
+
 
         }
         /// <summary>
