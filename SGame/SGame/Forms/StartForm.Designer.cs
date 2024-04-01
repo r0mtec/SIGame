@@ -50,7 +50,7 @@
             panel1.Location = new Point(0, 0);
             panel1.MinimumSize = new Size(950, 550);
             panel1.Name = "panel1";
-            panel1.Size = new Size(952, 550);
+            panel1.Size = new Size(1920, 1080);
             panel1.TabIndex = 2;
             panel1.Paint += panel1_Paint;
             // 
@@ -72,7 +72,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(952, 550);
+            tableLayoutPanel1.Size = new Size(1920, 1080);
             tableLayoutPanel1.TabIndex = 2;
             // 
             // tableLayoutPanel2
@@ -84,27 +84,27 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(create_button, 0, 1);
             tableLayoutPanel2.Controls.Add(text_name, 0, 0);
-            tableLayoutPanel2.Location = new Point(316, 250);
+            tableLayoutPanel2.Location = new Point(606, 462);
             tableLayoutPanel2.Margin = new Padding(30);
             tableLayoutPanel2.MinimumSize = new Size(0, 182);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(319, 182);
+            tableLayoutPanel2.Size = new Size(706, 370);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // create_button
             // 
             create_button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             create_button.AutoSize = true;
-            create_button.Location = new Point(62, 97);
-            create_button.Margin = new Padding(60, 5, 30, 30);
-            create_button.MaximumSize = new Size(490, 490);
+            create_button.Location = new Point(72, 191);
+            create_button.Margin = new Padding(70, 5, 30, 30);
+            create_button.MaximumSize = new Size(500, 490);
             create_button.MinimumSize = new Size(130, 80);
             create_button.Name = "create_button";
             create_button.RightToLeft = RightToLeft.Yes;
-            create_button.Size = new Size(225, 80);
+            create_button.Size = new Size(500, 80);
             create_button.TabIndex = 0;
             create_button.Text = "Войти";
             create_button.UseVisualStyleBackColor = true;
@@ -114,13 +114,13 @@
             // 
             text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             text_name.Font = new Font("Arial Narrow", 12F);
-            text_name.Location = new Point(72, 32);
-            text_name.Margin = new Padding(70, 30, 30, 20);
-            text_name.MaximumSize = new Size(460, 490);
+            text_name.Location = new Point(82, 138);
+            text_name.Margin = new Padding(80, 30, 30, 20);
+            text_name.MaximumSize = new Size(480, 490);
             text_name.MinimumSize = new Size(120, 40);
             text_name.Name = "text_name";
             text_name.PlaceholderText = "Введите ваш никнейм";
-            text_name.Size = new Size(215, 40);
+            text_name.Size = new Size(480, 40);
             text_name.TabIndex = 1;
             // 
             // fileSystemWatcher1
@@ -132,7 +132,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(952, 550);
+            ClientSize = new Size(1920, 1080);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             MaximumSize = new Size(1920, 1080);
