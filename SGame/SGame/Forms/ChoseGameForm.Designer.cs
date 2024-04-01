@@ -41,7 +41,7 @@
             host_but.Name = "host_but";
             host_but.Size = new Size(208, 60);
             host_but.TabIndex = 1;
-            host_but.Text = "Хостануть игру";
+            host_but.Text = "Создать игровую сессию";
             host_but.UseVisualStyleBackColor = true;
             host_but.Click += HostButton_click;
             // 
@@ -60,11 +60,12 @@
             // 
             IpTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             IpTextBox.Font = new Font("Arial Narrow", 12F);
-            IpTextBox.Location = new Point(330, 366);
+            IpTextBox.Location = new Point(300, 366);
             IpTextBox.Name = "IpTextBox";
-            IpTextBox.PlaceholderText = "Введите ip";
-            IpTextBox.Size = new Size(130, 26);
+            IpTextBox.PlaceholderText = "Введите IP-адрес сессии";
+            IpTextBox.Size = new Size(183, 26);
             IpTextBox.TabIndex = 4;
+            IpTextBox.KeyDown += IpTextBox_KeyDown;
             // 
             // ChoseGameForm
             // 

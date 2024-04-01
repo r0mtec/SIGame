@@ -35,6 +35,7 @@
             // 
             panel.Dock = DockStyle.Fill;
             panel.Location = new Point(0, 0);
+            panel.MinimumSize = new Size(950, 550);
             panel.Name = "panel";
             panel.Size = new Size(1200, 800);
             panel.TabIndex = 0;

@@ -132,6 +132,15 @@ namespace SignGame
             resizeControl(host_butRectangle, host_but);
             resizeControl(IpTextBoxRectangle, IpTextBox);
         }
+
+        private void IpTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                join_but.PerformClick();
+                
+            }
+        }
     }
 
 }
