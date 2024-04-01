@@ -84,21 +84,21 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(create_button, 0, 1);
             tableLayoutPanel2.Controls.Add(text_name, 0, 0);
-            tableLayoutPanel2.Location = new Point(606, 462);
-            tableLayoutPanel2.Margin = new Padding(30);
+            tableLayoutPanel2.Location = new Point(606, 442);
+            tableLayoutPanel2.Margin = new Padding(30, 10, 30, 60);
             tableLayoutPanel2.MinimumSize = new Size(0, 182);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(706, 370);
+            tableLayoutPanel2.Size = new Size(706, 360);
             tableLayoutPanel2.TabIndex = 2;
             // 
             // create_button
             // 
             create_button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             create_button.AutoSize = true;
-            create_button.Location = new Point(72, 191);
+            create_button.Location = new Point(72, 186);
             create_button.Margin = new Padding(70, 5, 30, 30);
             create_button.MaximumSize = new Size(500, 490);
             create_button.MinimumSize = new Size(130, 80);
@@ -114,7 +114,7 @@
             // 
             text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             text_name.Font = new Font("Arial Narrow", 12F);
-            text_name.Location = new Point(82, 138);
+            text_name.Location = new Point(82, 133);
             text_name.Margin = new Padding(80, 30, 30, 20);
             text_name.MaximumSize = new Size(480, 490);
             text_name.MinimumSize = new Size(120, 40);
