@@ -97,6 +97,7 @@
             // 
             create_button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             create_button.AutoSize = true;
+            create_button.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             create_button.Location = new Point(70, 113);
             create_button.Margin = new Padding(70, 5, 25, 30);
             create_button.MaximumSize = new Size(500, 490);
@@ -112,7 +113,7 @@
             // text_name
             // 
             text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            text_name.Font = new Font("Arial Narrow", 12F);
+            text_name.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             text_name.Location = new Point(80, 48);
             text_name.Margin = new Padding(80, 30, 30, 20);
             text_name.MaximumSize = new Size(480, 490);
