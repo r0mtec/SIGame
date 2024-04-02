@@ -41,7 +41,7 @@
             countPlayersLabel.Location = new Point(403, 60);
             countPlayersLabel.Margin = new Padding(3, 60, 3, 10);
             countPlayersLabel.Name = "countPlayersLabel";
-            countPlayersLabel.Size = new Size(373, 64);
+            countPlayersLabel.Size = new Size(366, 64);
             countPlayersLabel.TabIndex = 0;
             countPlayersLabel.Text = "Количество присоединившихся игроков: 0/6";
             countPlayersLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -53,9 +53,9 @@
             messageLabel.Location = new Point(30, 296);
             messageLabel.Margin = new Padding(30, 30, 3, 3);
             messageLabel.Name = "messageLabel";
-            messageLabel.Size = new Size(107, 32);
+            messageLabel.Size = new Size(294, 32);
             messageLabel.TabIndex = 1;
-            messageLabel.Text = "message";
+            messageLabel.Text = "Сообщения от ведущего:";
             // 
             // tableLayoutPanel1
             // 
