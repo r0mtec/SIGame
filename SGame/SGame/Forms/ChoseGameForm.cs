@@ -18,13 +18,7 @@ namespace SignGame
     public partial class ChoseGameForm : Form
     {
 
-        private Rectangle join_butRectangle;
-
-        private Rectangle IpTextBoxRectangle;
-
-        private Rectangle host_butRectangle;
-
-        private Rectangle originalChoseGameSize;
+        
 
         /// <summary>
         /// Поле-обьект для работы с пользователем
@@ -35,10 +29,7 @@ namespace SignGame
             InitializeComponent();
             mainForm = parrentForm;
 
-            originalChoseGameSize = new Rectangle(this.Location.X, this.Location.Y, this.Width, this.Height);
-            join_butRectangle = new Rectangle(join_but.Location.X, join_but.Location.Y, join_but.Width, join_but.Height);
-            host_butRectangle = new Rectangle(host_but.Location.X, host_but.Location.Y, host_but.Width, host_but.Height);
-            IpTextBoxRectangle = new Rectangle(IpTextBox.Location.X, IpTextBox.Location.Y, IpTextBox.Width, IpTextBox.Height);
+            
         }
 
         /// <summary>
@@ -109,28 +100,16 @@ namespace SignGame
 
         }
 
-        protected void resizeControl(Rectangle r, Control c)
+       
+
+       
+        private void IpTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            float xRatio = (float)(this.Width) / (float)(originalChoseGameSize.Width);
-            float yRatio = (float)(this.Height) / (float)(originalChoseGameSize.Height);
-
-            int newX = (int)(r.Location.X * xRatio);
-            int newY = (int)(r.Location.Y * yRatio);
-
-            int newWidth = (int)(r.Width * xRatio);
-            int newHeight = (int)(r.Height * yRatio);
-
-
-
-            c.Location = new Point(newX, newY);
-            c.Size = new Size(newWidth, newHeight);
-        }
-
-        private void ChoseGameForm_SizeChanged(object sender, EventArgs e)
-        {
-            resizeControl(join_butRectangle, join_but);
-            resizeControl(host_butRectangle, host_but);
-            resizeControl(IpTextBoxRectangle, IpTextBox);
+            if (e.KeyData == Keys.Enter)
+            {
+                join_but.PerformClick();
+                
+            }
         }
     }
 

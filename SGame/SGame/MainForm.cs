@@ -19,7 +19,7 @@ namespace SGame
         public ManageUser manageUser;
 
 
-        protected Rectangle originalMainFormSize;
+      
 
         public void ChangeForm(Form newForm)
         {
@@ -54,21 +54,8 @@ namespace SGame
         {
             InitializeComponent();
             ChangeForm(new StartForm(this));
-        }
-
-        protected void resizeControl(Rectangle r, Control c)
-        {
-            float xRatio = (float)(this.Width) / (float)(originalMainFormSize.Width);
-            float yRatio = (float)(this.Height) / (float)(originalMainFormSize.Height);
-
-            int newX = (int)(r.Location.X * xRatio);
-            int newY = (int)(r.Location.Y * yRatio);
-
-            int newWidth = (int)(r.Width * xRatio);
-            int newHeight = (int)(r.Height * yRatio);
-
-            c.Location = new Point(newX, newY);
-            c.Size = new Size(newWidth, newHeight);
+            this.SuspendLayout();
+            this.ResumeLayout(false);
         }
 
         

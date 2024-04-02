@@ -108,7 +108,7 @@ namespace SGame.Forms
                 }
                 catch
                 {
-                    messageLabel.Text = "Сервер отключился";
+                    messageLabel.Text = "Потеряно соединение с сервером";
                     break;
                 }
 
@@ -121,7 +121,7 @@ namespace SGame.Forms
                 List<string> parseReceivedMessage = Parse(receivedMessage);
                 if (Consist(parseReceivedMessage, new List<string> { "count" }))
                 {
-                    countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
+                    countPlayersLabel.Text = "Количество присоединившихся игроков:"+ parseReceivedMessage[0] + "/6";
                 }
                 else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
                 {
