@@ -1,4 +1,6 @@
-﻿namespace SGame.Forms
+﻿using System.Windows.Forms;
+
+namespace SGame.Forms
 {
     partial class HostForm
     {
@@ -18,6 +20,32 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+        private void ipLabel_Click(object sender, EventArgs e)
+        {
+            Point cursorPos = Cursor.Position;
+            string s = "";
+            for (int i = 0; i < ipLabel.Text.Length; i++)
+            {
+                if (ipLabel.Text[i] == ':')
+                {
+                    s = ipLabel.Text.Substring(i + 2);
+                }
+            }
+            messageLabel.Location = new Point(cursorPos.X + 20, cursorPos.Y);
+            messageLabel.Visible = true;
+            messageLabel.BringToFront();
+
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval = 1000; // 1 секунды
+            timer.Tick += (s, ev) =>
+            {
+                messageLabel.Visible = false;
+                timer.Stop();
+                timer.Dispose();
+            };
+            timer.Start();
+            Clipboard.SetText(s, TextDataFormat.UnicodeText);
         }
 
         #region Windows Form Designer generated code
@@ -43,19 +71,21 @@
             // 
             ipLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ipLabel.AutoSize = true;
+            ipLabel.Cursor = Cursors.Hand;
             ipLabel.Font = new Font("Segoe UI", 21.75F);
-            ipLabel.Location = new Point(449, 50);
-            ipLabel.Margin = new Padding(50);
+            ipLabel.Location = new Point(469, 70);
+            ipLabel.Margin = new Padding(70);
             ipLabel.Name = "ipLabel";
-            ipLabel.Size = new Size(300, 166);
+            ipLabel.Size = new Size(260, 126);
             ipLabel.TabIndex = 0;
             ipLabel.Text = "IP";
             ipLabel.TextAlign = ContentAlignment.MiddleCenter;
+            ipLabel.Click += ipLabel_Click;
             // 
             // MessageTextBox
             // 
             MessageTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            MessageTextBox.Font = new Font("Arial Narrow", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            MessageTextBox.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             MessageTextBox.Location = new Point(30, 106);
             MessageTextBox.Margin = new Padding(30, 20, 30, 0);
             MessageTextBox.MinimumSize = new Size(0, 36);
@@ -83,14 +113,13 @@
             playersListLabes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             playersListLabes.AutoEllipsis = true;
             playersListLabes.BackColor = Color.Transparent;
-            playersListLabes.Font = new Font("Segoe UI", 14.25F);
+            playersListLabes.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             playersListLabes.ForeColor = SystemColors.ActiveCaptionText;
             playersListLabes.Location = new Point(30, 296);
             playersListLabes.Margin = new Padding(30);
             playersListLabes.Name = "playersListLabes";
             playersListLabes.Size = new Size(339, 206);
             playersListLabes.TabIndex = 9;
-            playersListLabes.Text = "123";
             playersListLabes.TextAlign = ContentAlignment.TopCenter;
             // 
             // buttonStartGame
@@ -143,6 +172,15 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.Size = new Size(394, 260);
             tableLayoutPanel2.TabIndex = 12;
+            //
+            // messageLabel
+            //
+            messageLabel = new Label();
+            messageLabel.Text = "текст скопирован";
+            messageLabel.AutoSize = true;
+            messageLabel.BackColor = Color.LightGray;
+            messageLabel.Visible = false;
+            Controls.Add(messageLabel);
             // 
             // HostForm
             // 
@@ -171,5 +209,6 @@
         private Button buttonStartGame;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
+        private Label messageLabel;
     }
 }

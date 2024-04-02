@@ -15,6 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using SGame.PackClass;
 using System.Reflection;
 using System.Threading;
+using System.Reflection.Emit;
 
 namespace SGame.Forms
 {
@@ -112,7 +113,7 @@ namespace SGame.Forms
                 catch
                 {
                     int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
-                    if(idClient == -1) return;
+                    if (idClient == -1) return;
                     connectedUsers.Remove(connectedUsers[idClient]);
                     tcpClient.Close();
                     refresh_label();
@@ -128,7 +129,7 @@ namespace SGame.Forms
 
                     // Десериализуем полученные данные в объект User
                     string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size);
-                    try 
+                    try
                     {
                         User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
                         if (AnwerUser?.Name != null)
@@ -150,20 +151,20 @@ namespace SGame.Forms
                                 {
                                     BroadcastMessage(connectedUsers.Count.ToString() + " count");
                                 }
-                                else 
+                                else
                                 {
                                     BroadcastMessage(connectedUsers);
                                 }
                             }
                             refresh_label();
                         }
-                        
+
                     }
-                    catch{  }; 
+                    catch { };
                     try
                     {
                         QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(jsonAnswer);
-                        if(question?.question != null) 
+                        if (question?.question != null)
                         {
                             int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                             if (connectedUsers[idClient].isOtv)
@@ -183,18 +184,18 @@ namespace SGame.Forms
                                 BroadcastMessage(question);
                             }
                         }
-                        
+
                     }
                     catch { };
                     List<string> parseReceivedMessage = Parse(jsonAnswer);
-                    if (Consist(parseReceivedMessage, new List<string> { "+","all" }))
+                    if (Consist(parseReceivedMessage, new List<string> { "+", "all" }))
                     {
                         Random random = new Random();
                         connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
                         BroadcastMessage(connectedUsers);
                         checkAsync();
                     }
-                    else if (Consist(parseReceivedMessage, new List<string> {"+"}))
+                    else if (Consist(parseReceivedMessage, new List<string> { "+" }))
                     {
                         int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                         connectedUsers[idClient].isOtv = true;
@@ -202,7 +203,7 @@ namespace SGame.Forms
                         BroadcastMessage(connectedUsers);
                         checkAsync();
                     }
-                    else if(Consist(parseReceivedMessage, new List<string> { "-" }))
+                    else if (Consist(parseReceivedMessage, new List<string> { "-" }))
                     {
                         int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                         connectedUsers[idClient].User.Scores -= Int32.Parse(parseReceivedMessage[1]);
@@ -217,11 +218,12 @@ namespace SGame.Forms
         }
         private void refresh_label()
         {
-            string s = "";
+            string s = "Счет игроков: \n";
+            int count = 1;
             foreach (ConnectedUser client in connectedUsers)
             {
                 if (client.User == null) s += "Анонимус - -1 ";
-                else s += client.User.Name + " - " + client.User.Scores + "\n";
+                else s += count + ") " + client.User.Name + " - " + client.User.Scores + "\n";
             }
             // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
             playersListLabes.Invoke((System.Windows.Forms.MethodInvoker)delegate
@@ -243,7 +245,7 @@ namespace SGame.Forms
         private void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedUsers.Count == 0) return;
-            if(MessageTextBox.Text == "skip") 
+            if (MessageTextBox.Text == "skip")
             {
                 NextRound();
             }
@@ -266,7 +268,7 @@ namespace SGame.Forms
                 }
                 catch (Exception)
                 {
-                    
+
                 }
             }
             refresh_label();
@@ -296,7 +298,7 @@ namespace SGame.Forms
         }
         private async void BroadcastMessage(QuestionClass message)
         {
-            
+
             string json = JsonConvert.SerializeObject(message);
             byte[] data = Encoding.UTF8.GetBytes(json);
 
@@ -384,7 +386,7 @@ namespace SGame.Forms
             round = game.roundClasses[numberRound];
             numberRound++;
             BroadcastMessage(round);
-            while(connectedUsers.Count != 0)
+            while (connectedUsers.Count != 0)
             {
                 connectedUsers.RemoveAt(0);
             }
@@ -392,7 +394,9 @@ namespace SGame.Forms
             Random random = new Random();
             connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
             BroadcastMessage(connectedUsers);
-            
+
         }
+
+        
     }
 }
