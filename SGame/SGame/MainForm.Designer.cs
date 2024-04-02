@@ -48,7 +48,7 @@
             Controls.Add(panel);
             DoubleBuffered = true;
             Name = "SIGame";
-            Text = "Main";
+            Text = "SGame";
             ResumeLayout(false);
         }
 
