@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace SGame.AboutUser;
 
-internal class ConnectedUser
+public class ConnectedUser
 {
     [JsonIgnore] // This property will be ignored during serialization
     public TcpClient? Client { get; set; }

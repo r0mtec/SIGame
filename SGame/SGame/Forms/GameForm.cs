@@ -153,7 +153,11 @@ public partial class GameForm : Form
                 }
             }
             catch { };
-
+            if (receivedMessage == "end")
+            {
+                tcpSocket.Close();
+                mainForm.ChangeForm(new EndForm(connectedUsersOwn));
+            }
 
         }
 

@@ -16,11 +16,13 @@ using SGame.PackClass;
 using System.Reflection;
 using System.Threading;
 using System.Reflection.Emit;
+using SignGame;
 
 namespace SGame.Forms
 {
     public partial class HostForm : Form
     {
+        TcpListener tcpListener;
         private List<string> Parse(string otv)
         {
             List<string> words = new List<string>();
@@ -54,6 +56,7 @@ namespace SGame.Forms
             }
             return count == 0;
         }
+
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
         private SIGame? mainForm;
         RoundClass round = new RoundClass();
@@ -75,7 +78,7 @@ namespace SGame.Forms
 
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            var tcpListener = new TcpListener(tcpEndPoint);
+            tcpListener = new TcpListener(tcpEndPoint);
             tcpListener.Start();
 
 
@@ -88,7 +91,7 @@ namespace SGame.Forms
             {
                 // Ожидаем нового подключения от клиента
                 var tcpClient = await tcpListener.AcceptTcpClientAsync();
-
+                
                 // Запускаем асинхронный метод для обработки каждого клиента
                 _ = Task.Run(() => HandleClient(tcpClient));
             }
@@ -234,13 +237,27 @@ namespace SGame.Forms
         }
         async void NextRound()
         {
-            await Task.Delay(200);
-            round = game.roundClasses[numberRound];
-            BroadcastMessage(round);
-            await Task.Delay(200);
-            BroadcastMessage(connectedUsers);
-            await Task.Delay(200);
-            numberRound++;
+            if(numberRound == game.roundClasses.Count) 
+            {
+                BroadcastMessage("end");
+                foreach(ConnectedUser client in connectedUsers) 
+                {
+                    client.Client?.Close();
+                }
+                tcpListener.Stop();
+                mainForm?.ChangeForm(new ChoseGameForm(mainForm));
+            }
+            else
+            {
+                await Task.Delay(200);
+                round = game.roundClasses[numberRound];
+                BroadcastMessage(round);
+                await Task.Delay(200);
+                BroadcastMessage(connectedUsers);
+                await Task.Delay(200);
+                numberRound++;
+            }
+            
         }
         private void buttonSendMessage_Click(object sender, EventArgs e)
         {
