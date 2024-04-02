@@ -280,7 +280,7 @@ namespace SGame.Forms
             // panelUsers
             // 
             panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelUsers.BackColor = SystemColors.ControlLight;
+            panelUsers.BackColor = SystemColors.AppWorkspace;
             panelUsers.Location = new Point(0, 602);
             panelUsers.Name = "panelUsers";
             panelUsers.Size = new Size(1200, 198);

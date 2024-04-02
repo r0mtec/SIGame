@@ -50,6 +50,7 @@
             ipLabel.Size = new Size(300, 166);
             ipLabel.TabIndex = 0;
             ipLabel.Text = "IP";
+            ipLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // MessageTextBox
             // 
@@ -79,16 +80,18 @@
             // 
             // playersListLabes
             // 
+            playersListLabes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             playersListLabes.AutoEllipsis = true;
             playersListLabes.BackColor = Color.Transparent;
-            playersListLabes.Dock = DockStyle.Fill;
             playersListLabes.Font = new Font("Segoe UI", 14.25F);
             playersListLabes.ForeColor = SystemColors.ActiveCaptionText;
-            playersListLabes.Location = new Point(402, 535);
-            playersListLabes.Margin = new Padding(3);
+            playersListLabes.Location = new Point(30, 296);
+            playersListLabes.Margin = new Padding(30);
             playersListLabes.Name = "playersListLabes";
-            playersListLabes.Size = new Size(394, 262);
+            playersListLabes.Size = new Size(339, 206);
             playersListLabes.TabIndex = 9;
+            playersListLabes.Text = "123";
+            playersListLabes.TextAlign = ContentAlignment.TopCenter;
             // 
             // buttonStartGame
             // 
@@ -112,8 +115,8 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 1);
-            tableLayoutPanel1.Controls.Add(playersListLabes, 1, 2);
             tableLayoutPanel1.Controls.Add(ipLabel, 1, 0);
+            tableLayoutPanel1.Controls.Add(playersListLabes, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
