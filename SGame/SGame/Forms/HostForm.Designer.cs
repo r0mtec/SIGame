@@ -63,6 +63,7 @@ namespace SGame.Forms
             buttonStartGame = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            messageLabel = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -172,15 +173,17 @@ namespace SGame.Forms
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.Size = new Size(394, 260);
             tableLayoutPanel2.TabIndex = 12;
-            //
+            // 
             // messageLabel
-            //
-            messageLabel = new Label();
-            messageLabel.Text = "текст скопирован";
+            // 
             messageLabel.AutoSize = true;
             messageLabel.BackColor = Color.LightGray;
+            messageLabel.Location = new Point(0, 0);
+            messageLabel.Name = "messageLabel";
+            messageLabel.Size = new Size(104, 15);
+            messageLabel.TabIndex = 0;
+            messageLabel.Text = "текст скопирован";
             messageLabel.Visible = false;
-            Controls.Add(messageLabel);
             // 
             // HostForm
             // 
@@ -188,6 +191,7 @@ namespace SGame.Forms
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
+            Controls.Add(messageLabel);
             Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "HostForm";
