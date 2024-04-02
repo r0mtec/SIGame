@@ -43,46 +43,48 @@ namespace SignGame
             // 
             host_but.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             host_but.AutoSize = true;
+            host_but.BackColor = Color.Turquoise;
             host_but.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             host_but.Location = new Point(3, 105);
             host_but.Name = "host_but";
             host_but.Size = new Size(287, 45);
             host_but.TabIndex = 1;
             host_but.Text = "Создать игровую сессию";
-            host_but.UseVisualStyleBackColor = true;
+            host_but.UseVisualStyleBackColor = false;
             host_but.Click += HostButton_click;
             // 
             // join_but
             // 
             join_but.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             join_but.AutoSize = true;
+            join_but.BackColor = Color.LightGreen;
             join_but.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             join_but.Location = new Point(3, 54);
             join_but.Name = "join_but";
             join_but.Size = new Size(287, 45);
             join_but.TabIndex = 2;
             join_but.Text = "Присоединаться к игре";
-            join_but.UseVisualStyleBackColor = true;
+            join_but.UseVisualStyleBackColor = false;
             join_but.Click += join_but_Click;
             // 
             // IpTextBox
             // 
             IpTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            IpTextBox.BackColor = SystemColors.Window;
             IpTextBox.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            IpTextBox.Location = new Point(25, 15);
-            IpTextBox.Margin = new Padding(25, 15, 3, 0);
+            IpTextBox.Location = new Point(15, 15);
+            IpTextBox.Margin = new Padding(15, 15, 3, 0);
             IpTextBox.MaximumSize = new Size(540, 40);
             IpTextBox.MinimumSize = new Size(120, 20);
             IpTextBox.Name = "IpTextBox";
             IpTextBox.PlaceholderText = "Введите IP-адрес сессии";
-            IpTextBox.Size = new Size(265, 32);
+            IpTextBox.Size = new Size(275, 32);
             IpTextBox.TabIndex = 4;
             IpTextBox.KeyDown += IpTextBox_KeyDown;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.BackColor = SystemColors.ButtonFace;
-            tableLayoutPanel1.BackgroundImage = SGame.Properties.Resources.background;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
@@ -102,6 +104,7 @@ namespace SignGame
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel2.BackColor = SystemColors.ButtonFace;
             tableLayoutPanel2.BackgroundImageLayout = ImageLayout.None;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));

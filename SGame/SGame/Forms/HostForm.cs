@@ -79,7 +79,7 @@ namespace SGame.Forms
 
 
             // Задаем текст для Label
-            ipLabel.Text = "Ваш айпи - " + mainForm.manageUser.User.Ip;
+            ipLabel.Text = "Ваш IP-адрес: " + mainForm.manageUser.User.Ip;
 
 
             // Цикл для приема новых "клиентов"

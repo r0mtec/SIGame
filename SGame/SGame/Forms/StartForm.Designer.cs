@@ -59,7 +59,7 @@ namespace SignGame
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.BackgroundImage = SGame.Properties.Resources.background;
+            tableLayoutPanel1.BackColor = SystemColors.Menu;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
@@ -82,7 +82,7 @@ namespace SignGame
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.BackColor = Color.WhiteSmoke;
+            tableLayoutPanel2.BackColor = SystemColors.ButtonFace;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(create_button, 0, 1);
@@ -103,6 +103,7 @@ namespace SignGame
             // 
             create_button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             create_button.AutoSize = true;
+            create_button.BackColor = Color.LightGreen;
             create_button.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             create_button.Location = new Point(45, 96);
             create_button.Margin = new Padding(45, 5, 25, 30);
@@ -113,7 +114,7 @@ namespace SignGame
             create_button.Size = new Size(250, 80);
             create_button.TabIndex = 0;
             create_button.Text = "Войти";
-            create_button.UseVisualStyleBackColor = true;
+            create_button.UseVisualStyleBackColor = false;
             create_button.Click += create_button_Click;
             // 
             // text_name
