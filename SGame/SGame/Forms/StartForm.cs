@@ -23,14 +23,25 @@ namespace SignGame
         /// <summary>
         /// Поле для подключения формы родителя
         /// </summary>
-        private MainForm? mainForm;
+        private SIGame? mainForm;
+
+
         /// <summary>
         /// Инициализация формы
         /// </summary>
-        public StartForm(MainForm parrentForm)
+        public StartForm(SIGame parrentForm)
         {
+
+            
             InitializeComponent();
             mainForm = parrentForm;
+            this.SuspendLayout();
+            this.ResumeLayout(false);
+
+
+
+
+
         }
         /// <summary>
         /// Создание пользователя при нажатии на кнопку
@@ -60,5 +71,10 @@ namespace SignGame
                 e.Graphics.FillRectangle(brush, this.ClientRectangle);
             }
         }
+
+       
+
+        
+
     }
 }

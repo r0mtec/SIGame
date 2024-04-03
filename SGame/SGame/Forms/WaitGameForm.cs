@@ -20,8 +20,8 @@ namespace SGame.Forms
 {
     public partial class WaitGameForm : Form
     {
-        private MainForm? mainForm;
-        public WaitGameForm(MainForm parentForm, string connectingIp)
+        private SIGame? mainForm;
+        public WaitGameForm(SIGame parentForm, string connectingIp)
         {
             this.mainForm = parentForm;
             InitializeComponent();
@@ -108,7 +108,7 @@ namespace SGame.Forms
                 }
                 catch
                 {
-                    messageLabel.Text = "Сервер отключился";
+                    messageLabel.Text = "Потеряно соединение с сервером";
                     break;
                 }
 
@@ -121,7 +121,7 @@ namespace SGame.Forms
                 List<string> parseReceivedMessage = Parse(receivedMessage);
                 if (Consist(parseReceivedMessage, new List<string> { "count" }))
                 {
-                    countPlayersLabel.Text = parseReceivedMessage[0] + "/6";
+                    countPlayersLabel.Text = "Количество присоединившихся игроков:"+ parseReceivedMessage[0] + "/6";
                 }
                 else if(Consist(parseReceivedMessage, new List<string> { "Start", "game" })) 
                 {
@@ -160,17 +160,14 @@ namespace SGame.Forms
 
                         if (Round != null)
                         {
-                            //tcpSocket.Close();
-                            mainForm.ChangeForm(new GameForm(mainForm, tcpSocket, Round));
+                            tcpSocket.Close();
+                            mainForm.ChangeForm(new GameForm(mainForm, tcpEndPoint, Round));
 
                         }
                     }
                     break;
                 };
             }
-
-            // Завершаем соединение и закрываем сокет
-            tcpSocket.Close();
         }
     }
 }

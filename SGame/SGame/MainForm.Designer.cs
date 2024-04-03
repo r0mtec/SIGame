@@ -1,6 +1,6 @@
 ﻿namespace SGame
 {
-    partial class MainForm
+    partial class SIGame
     {
         /// <summary>
         /// Required designer variable.
@@ -35,18 +35,20 @@
             // 
             panel.Dock = DockStyle.Fill;
             panel.Location = new Point(0, 0);
+            panel.MinimumSize = new Size(950, 550);
             panel.Name = "panel";
             panel.Size = new Size(1200, 800);
             panel.TabIndex = 0;
             // 
-            // Main
+            // SIGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1200, 800);
             Controls.Add(panel);
-            Name = "Main";
-            Text = "Main";
+            DoubleBuffered = true;
+            Name = "SIGame";
+            Text = "SGame";
             ResumeLayout(false);
         }
 

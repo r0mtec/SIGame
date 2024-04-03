@@ -14,7 +14,7 @@ namespace SignGame
             // see https://aka.ms/applicationconfiguration.
            
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            Application.Run(new SIGame());
             SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
             //game.initGame(new StreamReader("C:\\Users\\busla\\Desktop\\нирсэ\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
         }

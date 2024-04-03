@@ -15,11 +15,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using SGame.PackClass;
 using System.Reflection;
 using System.Threading;
+using System.Reflection.Emit;
+using SignGame;
 
 namespace SGame.Forms
 {
     public partial class HostForm : Form
     {
+        TcpListener tcpListener;
         private List<string> Parse(string otv)
         {
             List<string> words = new List<string>();
@@ -53,12 +56,14 @@ namespace SGame.Forms
             }
             return count == 0;
         }
+
         List<ConnectedUser> connectedUsers = new List<ConnectedUser>();
-        private MainForm? mainForm;
+        private SIGame? mainForm;
         RoundClass round = new RoundClass();
         private int numberRound = 0;
+        bool roundStart = false;
         SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
-        public HostForm(MainForm? parrentForm)
+        public HostForm(SIGame? parrentForm)
         {
             this.mainForm = parrentForm;
             InitializeComponent();
@@ -73,12 +78,12 @@ namespace SGame.Forms
 
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            var tcpListener = new TcpListener(tcpEndPoint);
+            tcpListener = new TcpListener(tcpEndPoint);
             tcpListener.Start();
 
 
             // Задаем текст для Label
-            ipLabel.Text = "Ваш айпи - " + mainForm.manageUser.User.Ip;
+            ipLabel.Text = "Ваш IP-адрес: " + mainForm.manageUser.User.Ip;
 
 
             // Цикл для приема новых "клиентов"
@@ -86,7 +91,7 @@ namespace SGame.Forms
             {
                 // Ожидаем нового подключения от клиента
                 var tcpClient = await tcpListener.AcceptTcpClientAsync();
-
+                
                 // Запускаем асинхронный метод для обработки каждого клиента
                 _ = Task.Run(() => HandleClient(tcpClient));
             }
@@ -111,7 +116,7 @@ namespace SGame.Forms
                 catch
                 {
                     int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
-                    if(idClient == -1) return;
+                    if (idClient == -1) return;
                     connectedUsers.Remove(connectedUsers[idClient]);
                     tcpClient.Close();
                     refresh_label();
@@ -127,7 +132,7 @@ namespace SGame.Forms
 
                     // Десериализуем полученные данные в объект User
                     string jsonAnswer = Encoding.UTF8.GetString(buffer, 0, size);
-                    try 
+                    try
                     {
                         User AnwerUser = JsonConvert.DeserializeObject<User>(jsonAnswer);
                         if (AnwerUser?.Name != null)
@@ -139,22 +144,30 @@ namespace SGame.Forms
                             {
                                 // Элемент найден, изменяем его
                                 connectedUsers[index].User = AnwerUser;
+                                BroadcastMessage(connectedUsers);
 
                             }
                             else
                             {
                                 connectedUsers.Add(new ConnectedUser(tcpClient, AnwerUser));
-                                BroadcastMessage(connectedUsers.Count.ToString() + " count");
+                                if (!roundStart)
+                                {
+                                    BroadcastMessage(connectedUsers.Count.ToString() + " count");
+                                }
+                                else
+                                {
+                                    BroadcastMessage(connectedUsers);
+                                }
                             }
                             refresh_label();
                         }
-                        
+
                     }
-                    catch{  }; 
+                    catch { };
                     try
                     {
                         QuestionClass question = JsonConvert.DeserializeObject<QuestionClass>(jsonAnswer);
-                        if(question?.question != null) 
+                        if (question?.question != null)
                         {
                             int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                             if (connectedUsers[idClient].isOtv)
@@ -173,23 +186,19 @@ namespace SGame.Forms
                                 connectedUsers[idClient].isOtv = false;
                                 BroadcastMessage(question);
                             }
-                            else
-                            {
-                                BroadcastMessage("мусор");
-                            }
                         }
-                        
+
                     }
                     catch { };
                     List<string> parseReceivedMessage = Parse(jsonAnswer);
-                    if (Consist(parseReceivedMessage, new List<string> { "+","all" }))
+                    if (Consist(parseReceivedMessage, new List<string> { "+", "all" }))
                     {
                         Random random = new Random();
                         connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
                         BroadcastMessage(connectedUsers);
                         checkAsync();
                     }
-                    else if (Consist(parseReceivedMessage, new List<string> {"+"}))
+                    else if (Consist(parseReceivedMessage, new List<string> { "+" }))
                     {
                         int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                         connectedUsers[idClient].isOtv = true;
@@ -197,11 +206,10 @@ namespace SGame.Forms
                         BroadcastMessage(connectedUsers);
                         checkAsync();
                     }
-                    else if(Consist(parseReceivedMessage, new List<string> { "-" }))
+                    else if (Consist(parseReceivedMessage, new List<string> { "-" }))
                     {
                         int idClient = connectedUsers.FindIndex(client => client.Client == tcpClient);
                         connectedUsers[idClient].User.Scores -= Int32.Parse(parseReceivedMessage[1]);
-                        BroadcastMessage("мусор");
                     }
 
                 }
@@ -209,16 +217,16 @@ namespace SGame.Forms
                 {
                     // Обработка и вывод ошибок в текстовое поле
                 }
-                BroadcastMessage("мусор");
             }
         }
         private void refresh_label()
         {
-            string s = "";
+            string s = "Счет игроков: \n";
+            int count = 1;
             foreach (ConnectedUser client in connectedUsers)
             {
                 if (client.User == null) s += "Анонимус - -1 ";
-                else s += client.User.Name + " - " + client.User.Scores + "\n";
+                else s += count + ") " + client.User.Name + " - " + client.User.Scores + "\n";
             }
             // Обновляем пользовательский интерфейс (UI) с использованием делегата и метода Invoke
             playersListLabes.Invoke((System.Windows.Forms.MethodInvoker)delegate
@@ -229,20 +237,32 @@ namespace SGame.Forms
         }
         async void NextRound()
         {
-            //BroadcastMessage("мусор");
-            round = game.roundClasses[numberRound];
-            BroadcastMessage(round);
-            await Task.Delay(200);
-            BroadcastMessage("мусор");
-            BroadcastMessage(connectedUsers);
-            await Task.Delay(200);
-            BroadcastMessage("мусор");
-            numberRound++;
+            if(numberRound >= game.roundClasses.Count) 
+            {
+                BroadcastMessage("end");
+                foreach(ConnectedUser client in connectedUsers) 
+                {
+                   // client.Client?.Close();
+                }
+                //tcpListener.Stop();
+                mainForm?.ChangeForm(new ChoseGameForm(mainForm));
+            }
+            else
+            {
+                await Task.Delay(200);
+                round = game.roundClasses[numberRound];
+                BroadcastMessage(round);
+                await Task.Delay(200);
+                BroadcastMessage(connectedUsers);
+                await Task.Delay(200);
+                numberRound++;
+            }
+            
         }
         private void buttonSendMessage_Click(object sender, EventArgs e)
         {
             if (connectedUsers.Count == 0) return;
-            if(MessageTextBox.Text == "skip") 
+            if (MessageTextBox.Text == "skip")
             {
                 NextRound();
             }
@@ -265,7 +285,7 @@ namespace SGame.Forms
                 }
                 catch (Exception)
                 {
-                    playersListLabes.Text = "Ошибка при отправке данных";
+
                 }
             }
             refresh_label();
@@ -295,7 +315,7 @@ namespace SGame.Forms
         }
         private async void BroadcastMessage(QuestionClass message)
         {
-            
+
             string json = JsonConvert.SerializeObject(message);
             byte[] data = Encoding.UTF8.GetBytes(json);
 
@@ -332,7 +352,7 @@ namespace SGame.Forms
                 }
                 try
                 {
-                    await client.Client.GetStream().WriteAsync(data);
+                    await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                     //await client.Client.GetStream().WriteAsync(data, 0, data.Length);
                 }
                 catch (Exception)
@@ -379,15 +399,21 @@ namespace SGame.Forms
                 }
             }
             else return;
-
-            Random random = new Random();
-            connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
+            roundStart = true;
             round = game.roundClasses[numberRound];
             numberRound++;
             BroadcastMessage(round);
-            await Task.Delay(100);
+            while (connectedUsers.Count != 0)
+            {
+                connectedUsers.RemoveAt(0);
+            }
+            await Task.Delay(500);
+            Random random = new Random();
+            connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
             BroadcastMessage(connectedUsers);
-            BroadcastMessage("мусор");
+
         }
+
+        
     }
 }
