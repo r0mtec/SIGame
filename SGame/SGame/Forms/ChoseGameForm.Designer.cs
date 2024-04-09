@@ -70,21 +70,22 @@ namespace SignGame
             // IpTextBox
             // 
             IpTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            IpTextBox.BackColor = SystemColors.Window;
+            IpTextBox.BackColor = SystemColors.ScrollBar;
             IpTextBox.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            IpTextBox.Location = new Point(15, 15);
-            IpTextBox.Margin = new Padding(15, 15, 3, 0);
+            IpTextBox.Location = new Point(5, 15);
+            IpTextBox.Margin = new Padding(5, 15, 3, 0);
             IpTextBox.MaximumSize = new Size(540, 40);
             IpTextBox.MinimumSize = new Size(120, 20);
             IpTextBox.Name = "IpTextBox";
             IpTextBox.PlaceholderText = "Введите IP-адрес сессии";
-            IpTextBox.Size = new Size(275, 32);
+            IpTextBox.Size = new Size(285, 32);
             IpTextBox.TabIndex = 4;
+            IpTextBox.TextAlign = HorizontalAlignment.Center;
             IpTextBox.KeyDown += IpTextBox_KeyDown;
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.BackColor = SystemColors.ButtonFace;
+            tableLayoutPanel1.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
@@ -104,13 +105,13 @@ namespace SignGame
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tableLayoutPanel2.BackColor = SystemColors.ButtonFace;
+            tableLayoutPanel2.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel2.BackgroundImageLayout = ImageLayout.None;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Controls.Add(host_but, 0, 2);
-            tableLayoutPanel2.Controls.Add(IpTextBox, 0, 0);
             tableLayoutPanel2.Controls.Add(join_but, 0, 1);
+            tableLayoutPanel2.Controls.Add(IpTextBox, 0, 0);
             tableLayoutPanel2.Location = new Point(383, 233);
             tableLayoutPanel2.Margin = new Padding(30, 10, 30, 60);
             tableLayoutPanel2.MinimumSize = new Size(0, 150);

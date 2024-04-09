@@ -59,7 +59,7 @@ namespace SignGame
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.BackColor = SystemColors.Menu;
+            tableLayoutPanel1.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
@@ -82,7 +82,7 @@ namespace SignGame
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.BackColor = SystemColors.ButtonFace;
+            tableLayoutPanel2.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(create_button, 0, 1);
@@ -120,6 +120,7 @@ namespace SignGame
             // text_name
             // 
             text_name.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            text_name.BackColor = SystemColors.ScrollBar;
             text_name.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             text_name.Location = new Point(50, 31);
             text_name.Margin = new Padding(50, 30, 30, 20);
@@ -129,6 +130,7 @@ namespace SignGame
             text_name.PlaceholderText = "Введите ваш никнейм";
             text_name.Size = new Size(240, 40);
             text_name.TabIndex = 1;
+            text_name.TextAlign = HorizontalAlignment.Center;
             // 
             // fileSystemWatcher1
             // 
