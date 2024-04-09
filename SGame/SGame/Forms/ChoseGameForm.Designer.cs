@@ -45,9 +45,9 @@ namespace SignGame
             host_but.AutoSize = true;
             host_but.BackColor = Color.Turquoise;
             host_but.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            host_but.Location = new Point(3, 105);
+            host_but.Location = new Point(3, 171);
             host_but.Name = "host_but";
-            host_but.Size = new Size(287, 45);
+            host_but.Size = new Size(557, 79);
             host_but.TabIndex = 1;
             host_but.Text = "Создать игровую сессию";
             host_but.UseVisualStyleBackColor = false;
@@ -59,9 +59,9 @@ namespace SignGame
             join_but.AutoSize = true;
             join_but.BackColor = Color.LightGreen;
             join_but.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            join_but.Location = new Point(3, 54);
+            join_but.Location = new Point(3, 87);
             join_but.Name = "join_but";
-            join_but.Size = new Size(287, 45);
+            join_but.Size = new Size(557, 78);
             join_but.TabIndex = 2;
             join_but.Text = "Присоединаться к игре";
             join_but.UseVisualStyleBackColor = false;
@@ -72,13 +72,13 @@ namespace SignGame
             IpTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             IpTextBox.BackColor = SystemColors.ScrollBar;
             IpTextBox.Font = new Font("Arial Narrow", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            IpTextBox.Location = new Point(5, 15);
-            IpTextBox.Margin = new Padding(5, 15, 3, 0);
+            IpTextBox.Location = new Point(15, 15);
+            IpTextBox.Margin = new Padding(15, 15, 15, 0);
             IpTextBox.MaximumSize = new Size(540, 40);
             IpTextBox.MinimumSize = new Size(120, 20);
             IpTextBox.Name = "IpTextBox";
             IpTextBox.PlaceholderText = "Введите IP-адрес сессии";
-            IpTextBox.Size = new Size(285, 32);
+            IpTextBox.Size = new Size(533, 32);
             IpTextBox.TabIndex = 4;
             IpTextBox.TextAlign = HorizontalAlignment.Center;
             IpTextBox.KeyDown += IpTextBox_KeyDown;
@@ -99,7 +99,7 @@ namespace SignGame
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3444481F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3444481F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3111076F));
-            tableLayoutPanel1.Size = new Size(1060, 670);
+            tableLayoutPanel1.Size = new Size(1869, 969);
             tableLayoutPanel1.TabIndex = 5;
             // 
             // tableLayoutPanel2
@@ -112,7 +112,7 @@ namespace SignGame
             tableLayoutPanel2.Controls.Add(host_but, 0, 2);
             tableLayoutPanel2.Controls.Add(join_but, 0, 1);
             tableLayoutPanel2.Controls.Add(IpTextBox, 0, 0);
-            tableLayoutPanel2.Location = new Point(383, 233);
+            tableLayoutPanel2.Location = new Point(652, 333);
             tableLayoutPanel2.Margin = new Padding(30, 10, 30, 60);
             tableLayoutPanel2.MinimumSize = new Size(0, 150);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -120,7 +120,7 @@ namespace SignGame
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.Size = new Size(293, 153);
+            tableLayoutPanel2.Size = new Size(563, 253);
             tableLayoutPanel2.TabIndex = 6;
             // 
             // ChoseGameForm
@@ -130,7 +130,7 @@ namespace SignGame
             AutoSize = true;
             BackColor = SystemColors.Highlight;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(1060, 665);
+            ClientSize = new Size(1869, 969);
             Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "ChoseGameForm";
