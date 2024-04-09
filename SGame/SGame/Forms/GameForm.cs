@@ -62,7 +62,8 @@ public partial class GameForm : Form
         round = Round;
         mainForm = parentForm;
         Listener();
-        //InitializeComponent(round);
+        InitializeComponent();
+        AddControlsToPanel();
     }
     private async void Listener()
     {

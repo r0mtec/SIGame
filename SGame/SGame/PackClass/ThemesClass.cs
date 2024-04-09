@@ -9,7 +9,7 @@ namespace SGame.PackClass
 {
     public class ThemesClass
     {
-        public String? themeName {  get; private set; }
+        public String? themeName { get; set; }
 
         public List<QuestionClass> questionClasses = new List<QuestionClass>();
 
@@ -38,6 +38,6 @@ namespace SGame.PackClass
                 }
             }
         }
-    
+
     }
 }

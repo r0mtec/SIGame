@@ -16,7 +16,7 @@ namespace SignGame
            
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
-            
+       
         }
     }
 }
