@@ -44,22 +44,24 @@ namespace SGame.PackClass
                 }
             }
             buf = new string(fileStream.ReadLine());
-            if (buf.Contains("QUESTION"))
+            if (buf.Contains("QUESTION PHOTO"))
             {
-                buf = new string(fileStream.ReadLine());
-                question += buf;
-                buf = new string(fileStream.ReadLine());    
-                while (!buf.Contains("QUESTION END")) {
-                    varinats.Add(buf);
-                    buf = new string(fileStream.ReadLine());
-                }
-            }
-            else if (buf.Contains("QUESTION PHOTO"))
-            {
+                type = true;
                 buf = new string(fileStream.ReadLine());
                 while (!buf.Contains("QUESTION PHOTO END"))
                 {
                     question += buf;
+                    buf = new string(fileStream.ReadLine());
+                }
+            }
+            else if (buf.Contains("QUESTION"))
+            {
+                buf = new string(fileStream.ReadLine());
+                question += buf;
+                buf = new string(fileStream.ReadLine());
+                while (!buf.Contains("QUESTION END"))
+                {
+                    varinats.Add(buf);
                     buf = new string(fileStream.ReadLine());
                 }
             }
