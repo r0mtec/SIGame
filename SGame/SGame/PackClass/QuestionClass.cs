@@ -24,12 +24,12 @@ namespace SGame.PackClass
         }
 
         public String? answer { get; set; }
-        
-        public bool? type { get; set; }
+
+        public QuestionsType type;
         public bool isUsed = false;
         public void initQuestion (StreamReader fileStream)
         {
-            type = false;
+
             String buf = "";
             
             question = "";
@@ -45,18 +45,9 @@ namespace SGame.PackClass
                 }
             }
             buf = new string(fileStream.ReadLine());
-            if (buf.Contains("QUESTION"))
+            if (buf.Contains("QUESTION PHOTO"))
             {
-                buf = new string(fileStream.ReadLine());
-                question += buf;
-                buf = new string(fileStream.ReadLine());    
-                while (!buf.Contains("QUESTION END")) {
-                    varinats.Add(buf);
-                    buf = new string(fileStream.ReadLine());
-                }
-            }
-            else if (buf.Contains("QUESTION PHOTO"))
-            {
+                type = QuestionsType.photo;
                 buf = new string(fileStream.ReadLine());
                 while (!buf.Contains("QUESTION PHOTO END"))
                 {
@@ -64,9 +55,34 @@ namespace SGame.PackClass
                     buf = new string(fileStream.ReadLine());
                 }
             }
+            else if (buf.Contains("QUESTION AUDIO"))
+            {
+                type = QuestionsType.audio;
+                buf = new string(fileStream.ReadLine());
+                while (!buf.Contains("QUESTION AUDIO END"))
+                {
+                    question += buf;
+                    buf = new string(fileStream.ReadLine());
+                }
+            }
+            else if (buf.Contains("QUESTION"))
+            {
+                type = QuestionsType.text;
+                buf = new string(fileStream.ReadLine());
+                question += buf;
+                buf = new string(fileStream.ReadLine());
+                while (!buf.Contains("QUESTION END"))
+                {
+                    varinats.Add(buf);
+                    type = QuestionsType.selection;
+                    buf = new string(fileStream.ReadLine());
+                }
+            }
+            
 
             if (fileStream.ReadLine().Contains("ANSWER"))
             {
+               
                 buf = new string(fileStream.ReadLine());
                 while (!buf.Contains("ANSWER END"))
                 {
@@ -74,6 +90,7 @@ namespace SGame.PackClass
                     buf = new string(fileStream.ReadLine());
                 }
             }
+
         }
 
     }

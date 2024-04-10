@@ -29,7 +29,7 @@ namespace SGame.Forms
         /// the contents of this method with the code editor.
         /// </summary>
         /// 
-        public void fullLabel()
+        public void fillLabel()
         {
             for(int i = 0; i < allLabels.Count; i++) 
             {
@@ -38,6 +38,7 @@ namespace SGame.Forms
                 {
                     s += connectedUsersOwn[i].User.Name + " - " + connectedUsersOwn[i].User.Scores;
                 }
+                if(s == "") allLabels[i].Hide();
                 allLabels[i].Text = s;
             }
         }
@@ -225,6 +226,13 @@ namespace SGame.Forms
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ResumeLayout(false);
+            allLabels.Add(label1);
+            allLabels.Add(label2);
+            allLabels.Add(label3);
+            allLabels.Add(label4);
+            allLabels.Add(label5);
+            allLabels.Add(label6);
+            fillLabel();
         }
 
         #endregion

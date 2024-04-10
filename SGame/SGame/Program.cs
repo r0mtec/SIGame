@@ -1,4 +1,5 @@
 using SGame;
+using SGame.PackClass;
 
 namespace SignGame
 {
@@ -16,7 +17,7 @@ namespace SignGame
             ApplicationConfiguration.Initialize();
             Application.Run(new SIGame());
             SGame.PackClass.GamePackClass game = new SGame.PackClass.GamePackClass();
-            //game.initGame(new StreamReader("C:\\Users\\busla\\Desktop\\íèðñý\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
+            //game.initGame(new StreamReader("C:\\Users\\busla\\Desktop\\Ã­Ã¨Ã°Ã±Ã½\\SGame\\SGame\\PackClass\\Data\\EconomicPack.txt"));
         }
     }
 }

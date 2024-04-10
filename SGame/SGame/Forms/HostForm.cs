@@ -237,14 +237,14 @@ namespace SGame.Forms
         }
         async void NextRound()
         {
-            if(numberRound == game.roundClasses.Count) 
+            if(numberRound >= game.roundClasses.Count) 
             {
                 BroadcastMessage("end");
                 foreach(ConnectedUser client in connectedUsers) 
                 {
-                    client.Client?.Close();
+                   // client.Client?.Close();
                 }
-                tcpListener.Stop();
+                //tcpListener.Stop();
                 mainForm?.ChangeForm(new ChoseGameForm(mainForm));
             }
             else
@@ -407,8 +407,9 @@ namespace SGame.Forms
             {
                 connectedUsers.RemoveAt(0);
             }
-            await Task.Delay(300);
+            await Task.Delay(500);
             Random random = new Random();
+            if (connectedUsers.Count <= 0) return;
             connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
             BroadcastMessage(connectedUsers);
 
