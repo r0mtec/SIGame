@@ -66,7 +66,7 @@ namespace SGame.Forms
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.BackColor = Color.Snow;
+            tableLayoutPanel1.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));

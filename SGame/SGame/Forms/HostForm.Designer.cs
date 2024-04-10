@@ -86,6 +86,7 @@ namespace SGame.Forms
             // MessageTextBox
             // 
             MessageTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MessageTextBox.BackColor = SystemColors.ScrollBar;
             MessageTextBox.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             MessageTextBox.Location = new Point(30, 106);
             MessageTextBox.Margin = new Padding(30, 20, 30, 0);
@@ -94,6 +95,7 @@ namespace SGame.Forms
             MessageTextBox.PlaceholderText = "Введите сообщение для игроков";
             MessageTextBox.Size = new Size(334, 36);
             MessageTextBox.TabIndex = 7;
+            MessageTextBox.TextAlign = HorizontalAlignment.Center;
             // 
             // buttonSendMessage
             // 
@@ -140,6 +142,7 @@ namespace SGame.Forms
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.BackColor = SystemColors.ButtonHighlight;
             tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
@@ -177,7 +180,7 @@ namespace SGame.Forms
             // messageLabel
             // 
             messageLabel.AutoSize = true;
-            messageLabel.BackColor = Color.LightGray;
+            messageLabel.BackColor = Color.LimeGreen;
             messageLabel.Location = new Point(0, 0);
             messageLabel.Name = "messageLabel";
             messageLabel.Size = new Size(104, 15);

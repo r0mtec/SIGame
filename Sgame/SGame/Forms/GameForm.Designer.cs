@@ -407,7 +407,7 @@ namespace SGame.Forms
             // panel
             // 
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel.BackColor = SystemColors.Highlight;
+            panel.BackColor = Color.FromArgb(40, 86, 182);
             panel.Location = new Point(0, 0);
             panel.Name = "panel";
             panel.Size = new Size(1200, 604);
@@ -416,7 +416,7 @@ namespace SGame.Forms
             // panelUsers
             // 
             panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelUsers.BackColor = SystemColors.MenuBar;
+            panelUsers.BackColor = Color.FromArgb(235, 239, 241);
             panelUsers.Location = new Point(0, 602);
             panelUsers.Name = "panelUsers";
             panelUsers.Size = new Size(1200, 198);
