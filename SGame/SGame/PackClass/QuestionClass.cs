@@ -12,7 +12,7 @@ namespace SGame.PackClass
 
         public int? price { get; set; }
 
-        List<String> varinats = new List<String>();
+        public List<String> varinats = new List<String>();
 
         public List<String>? getVariantsAnswer()
         {
@@ -23,9 +23,9 @@ namespace SGame.PackClass
             return varinats;
         }
 
-        public String? answer { get; private set; }
+        public String? answer { get; set; }
         
-        public bool? type { get; private set; }
+        public bool? type { get; set; }
         public bool isUsed = false;
         public void initQuestion (StreamReader fileStream)
         {

@@ -1,12 +1,24 @@
-﻿namespace SGame.Forms
+﻿using SGame.AboutUser;
+using SGame.PackClass;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+namespace SGame.Forms
 {
+
     partial class GameForm
     {
+        private CancellationTokenSource cancellationTokenSource;
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        private bool is_question = false;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -19,16 +31,55 @@
             }
             base.Dispose(disposing);
         }
-
-        private void AddControlsToPanel()
+        static int Distance(string s1, int m, string s2, int n)
         {
-            while (panel.Controls.Count > 0)
+            int[,] arr = new int[m + 1, n + 1];
+
+            for (int i = 0; i <= m; ++i)
+                arr[i, 0] = i;
+            for (int j = 0; j <= n; ++j)
+                arr[0, j] = j;
+
+            for (int i = 1; i <= m; ++i)
             {
-                Control control = panel.Controls[0];
-                panel.Controls.Remove(control);
-                control.Dispose();
+                for (int j = 1; j <= n; ++j)
+                {
+                    int cost = (s1[i - 1] != s2[j - 1]) ? 1 : 0;
+                    arr[i, j] = Math.Min(Math.Min(arr[i - 1, j] + 1, arr[i, j - 1] + 1), arr[i - 1, j - 1] + cost);
+                }
             }
 
+            return arr[m, n];
+        }
+        private async void StartTimer(int seconds, ColorProgressBar.ColorProgressBar progressBar1)
+        {
+            cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            progressBar1.Minimum = 0;
+            progressBar1.ForeColor = Color.Red;
+            progressBar1.Maximum = seconds;
+            try
+            {
+                while (seconds != 0 && !cancellationTokenSource.IsCancellationRequested)
+                {
+                    await Task.Delay(1000, cancellationTokenSource.Token);
+                    seconds--;
+                    progressBar1.Value = progressBar1.Maximum - seconds;
+                }
+                if (!cancellationTokenSource.IsCancellationRequested)
+                {
+                    await Task.Delay(200, cancellationTokenSource.Token);
+                    SendHost("+ all");
+                }
+            }
+            catch (Exception) { };
+        }
+        
+        private void AddControlsToPanel()
+        {
+            panel.Controls.Clear();
+            is_question = false;
             int numberOfTheme = 0;
             int width = panel.Width;
             int height = panel.Height;
@@ -59,9 +110,8 @@
                     button.Enabled = !question.isUsed;
                     button.Click += (sender, e) =>
                     {
-                        button.Enabled = false;
-                        question.isUsed = true;
-                        ChooseQuestion(question);
+                        SendHost(question);
+                        
                     };
 
                     panel.Controls.Add(button);
@@ -72,16 +122,48 @@
                 numberOfTheme++;
             }
         }
-
-        private void ChooseQuestion(QuestionClass question)
+        private void DisplayUser(List<ConnectedUser> connectedUsers)
         {
+            panelUsers.Controls.Clear();
+            for (int i = 0; i < connectedUsers.Count; i++)
+            {
+                Label label = new Label();
+                label.Name = "Theme" + connectedUsers[i].User.Name;
+                label.Location = new Point(i * (panelUsers.Width / connectedUsers.Count) + 10, 10);
+                label.Size = new Size(panelUsers.Width/connectedUsers.Count - 20, panelUsers.Height - 20);
+                label.Text = connectedUsers[i].User.Name + "\n" + connectedUsers[i].User.Scores;
+                if(connectedUsers[i].isOtv)
+                {
+                    label.BackColor = Color.Red;
+                }
+                else
+                {
+                    label.BackColor = Color.LightBlue;
+                }
+                label.Padding = new Padding(6);
+                label.Font = new Font("Arial", 20);
+                panelUsers.Controls.Add(label);
+            }
+        }
+        private void ChooseQuestionAsync(QuestionClass question)
+        {
+            foreach (ThemesClass theme in round.themeClasses)
+            {
+                foreach (var question1 in theme.questionClasses)
+                {
+                    if (question.question == question1.question)
+                    {
+                        question1.isUsed = true;
+                        break;
+                    }
+                }
+            }
             while (panel.Controls.Count > 0)
             {
                 Control control = panel.Controls[0]; 
                 panel.Controls.Remove(control); 
                 control.Dispose(); 
             }
-
             Label labelQuestion = new Label();
             labelQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
             labelQuestion.Location = new Point(50, 30);
@@ -91,7 +173,16 @@
             labelQuestion.TabIndex = 0;
             labelQuestion.Text = question.question;
             panel.Controls.Add(labelQuestion);
+            ColorProgressBar.ColorProgressBar progressBar1 = new ColorProgressBar.ColorProgressBar();
 
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = 10;
+            progressBar1.Value = 0;
+            progressBar1.ForeColor = Color.Red;
+            progressBar1.Size = new Size(panel.Width, 30);
+            progressBar1.Location = new Point(0, panel.Height - 30);
+
+            panel.Controls.Add(progressBar1);
             if (question.getVariantsAnswer() == null)
             {
                 RichTextBox textBox = new RichTextBox();
@@ -111,12 +202,22 @@
                 button.UseVisualStyleBackColor = true;
                 button.Click += (sender, e) =>
                 {
-                    button.Enabled = false;
-                    if (textBox.Text == question.answer)
+                    is_question = true;
+                    foreach (Control control in panel.Controls)
                     {
-
+                        if (control is Button)
+                        {
+                            Button button = (Button)control;
+                            button.Enabled = false;
+                        }
                     }
-                    AddControlsToPanel();
+                    if (Distance(textBox.Text.ToLower(), textBox.Text.Length, question.answer.ToLower(), question.answer.Length) < Math.Max(Math.Max(textBox.Text.Length, question.answer.Length) / 2, 0))
+                    {
+                        SendHost("+ " + question.price);
+                        cancellationTokenSource?.Cancel();
+                    }
+                    else SendHost("- " + question.price);
+                    
                 };
 
                 panel.Controls.Add(textBox);
@@ -139,16 +240,20 @@
                     button.Click += (sender, e) =>
                     {
                         button.Enabled = false;
+
                         if (variant == question.answer)
                         {
+                            SendHost("+ " + question.price);
+                            cancellationTokenSource?.Cancel();
                         }
-                        AddControlsToPanel();
+                        else SendHost("- " + question.price);
                     };
 
                     panel.Controls.Add(button);
                     numberOfVariant++;
                 }
             }
+            StartTimer(10, progressBar1);
         }
 
         #region Windows Form Designer generated code
@@ -159,32 +264,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            panel = new Panel();
+            panelUsers = new Panel();
             SuspendLayout();
             // 
-            // groupBox1
+            // panel
             // 
+            panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel.BackColor = SystemColors.Highlight;
-            panel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel.Location = new Point(200, 0);
+            panel.Location = new Point(0, 0);
             panel.Name = "panel";
-            panel.Size = new Size(1000, 650);
+            panel.Size = new Size(1200, 604);
             panel.TabIndex = 0;
+            // 
+            // panelUsers
+            // 
+            panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelUsers.BackColor = SystemColors.AppWorkspace;
+            panelUsers.Location = new Point(0, 602);
+            panelUsers.Name = "panelUsers";
+            panelUsers.Size = new Size(1200, 198);
+            panelUsers.TabIndex = 1;
             // 
             // GameForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(1200, 800);
+            Controls.Add(panelUsers);
             Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.None;
             Name = "GameForm";
             Text = "Game";
+            Resize += GameForm_Resize1;
             ResumeLayout(false);
+        }
+
+        private void GameForm_Resize1(object sender, EventArgs e)
+        {
+            if (!is_question)
+            {
+                AddControlsToPanel();
+                DisplayUser(connectedUsersOwn);
+            }
+            
         }
 
         #endregion
 
-        private GroupBox groupBox1;
+        private Panel panel;
+        private Panel panelUsers;
     }
 }

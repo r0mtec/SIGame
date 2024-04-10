@@ -17,14 +17,19 @@ namespace SignGame
 {
     public partial class ChoseGameForm : Form
     {
+
+        
+
         /// <summary>
         /// Поле-обьект для работы с пользователем
         /// </summary>
-        private MainForm? mainForm;
-        public ChoseGameForm(MainForm parrentForm)
+        private SIGame? mainForm;
+        public ChoseGameForm(SIGame parrentForm)
         {
             InitializeComponent();
             mainForm = parrentForm;
+
+            
         }
 
         /// <summary>
@@ -32,7 +37,7 @@ namespace SignGame
         /// </summary>
         private void HostButton_click(object sender, EventArgs e)
         {
-            if (mainForm.manageUser == null || mainForm == null) return;
+            if (mainForm?.manageUser == null || mainForm == null) return;
             mainForm.ChangeForm(new HostForm(mainForm));
         }
         /*
@@ -82,8 +87,8 @@ namespace SignGame
 
 
 
-        
-        private async void join_but_Click(object sender, EventArgs e)
+
+        private void join_but_Click(object sender, EventArgs e)
         {
 
             // Проверяем, что поле ввода IP-адреса не пустое
@@ -91,9 +96,21 @@ namespace SignGame
             {
                 return;
             }
-            mainForm.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
-            
+            mainForm?.ChangeForm(new WaitGameForm(mainForm, IpTextBox.Text));
+
+        }
+
+       
+
+       
+        private void IpTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                join_but.PerformClick();
+                
+            }
         }
     }
-       
+
 }
