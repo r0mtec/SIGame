@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -147,6 +148,11 @@ public partial class GameForm : Form
                 {
                     connectedUsersOwn = connectedUsers;
                     DisplayUser(connectedUsers);
+                    try
+                    {
+                        player.Stop();
+                    }
+                    catch (Exception ex) { };
                     cancellationTokenSource?.Cancel();
                     AddControlsToPanel();
                     continue;

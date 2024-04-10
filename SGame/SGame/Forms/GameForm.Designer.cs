@@ -6,6 +6,9 @@ using System.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Emit;
+using System.Media;
+using System.Numerics;
 
 namespace SGame.Forms
 {
@@ -17,6 +20,7 @@ namespace SGame.Forms
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        SoundPlayer player = new SoundPlayer();
 
         private bool is_question = false;
         /// <summary>
@@ -86,10 +90,10 @@ namespace SGame.Forms
 
             foreach (ThemesClass theme in round.themeClasses)
             {
-                Label label = new Label();
+                System.Windows.Forms.Label label = new System.Windows.Forms.Label();
                 label.Name = "Theme" + numberOfTheme.ToString();
                 label.Location = new Point(0, numberOfTheme * height / round.themeClasses.Count);
-                label.Size = new Size(200, height / round.themeClasses.Count);
+                label.Size = new Size(300, height / round.themeClasses.Count);
                 label.Text = theme.themeName;
                 label.BackColor = Color.Coral;
                 label.Padding = new Padding(6);
@@ -101,8 +105,8 @@ namespace SGame.Forms
                 {
                     Button button = new Button();
                     button.Name = "Button" + numberOfTheme.ToString() + numberOfQuestion.ToString();
-                    button.Location = new Point(200 + numberOfQuestion * (width - 200) / theme.questionClasses.Count, numberOfTheme * height / round.themeClasses.Count);
-                    button.Size = new Size((width - 200) / theme.questionClasses.Count, height / round.themeClasses.Count);
+                    button.Location = new Point(300 + numberOfQuestion * (width - 300) / theme.questionClasses.Count, numberOfTheme * height / round.themeClasses.Count);
+                    button.Size = new Size((width - 300) / theme.questionClasses.Count, height / round.themeClasses.Count);
                     button.Text = question.price.ToString();
                     button.BackColor = Color.LightBlue;
                     button.Padding = new Padding(6);
@@ -127,7 +131,7 @@ namespace SGame.Forms
             panelUsers.Controls.Clear();
             for (int i = 0; i < connectedUsers.Count; i++)
             {
-                Label label = new Label();
+                System.Windows.Forms.Label label = new System.Windows.Forms.Label();
                 label.Name = "Theme" + connectedUsers[i].User.Name;
                 label.Location = new Point(i * (panelUsers.Width / connectedUsers.Count) + 10, 10);
                 label.Size = new Size(panelUsers.Width/connectedUsers.Count - 20, panelUsers.Height - 20);
@@ -164,33 +168,34 @@ namespace SGame.Forms
                 panel.Controls.Remove(control); 
                 control.Dispose(); 
             }
-            Label labelQuestion = new Label();
-            labelQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-            labelQuestion.Location = new Point(50, 30);
-            labelQuestion.Name = "question";
-            labelQuestion.Size = new Size(panel.Width - 100, 170);
-            labelQuestion.Font = new Font("Arial", 22);
-            labelQuestion.TabIndex = 0;
-            labelQuestion.Text = question.question;
-            panel.Controls.Add(labelQuestion);
+            
             ColorProgressBar.ColorProgressBar progressBar1 = new ColorProgressBar.ColorProgressBar();
 
-            progressBar1.Minimum = 0;
-            progressBar1.Maximum = 10;
-            progressBar1.Value = 0;
-            progressBar1.ForeColor = Color.Red;
-            progressBar1.Size = new Size(panel.Width, 30);
-            progressBar1.Location = new Point(0, panel.Height - 30);
+            int time = 10;
+            is_question = true;
+
+
 
             panel.Controls.Add(progressBar1);
-            if (question.getVariantsAnswer() == null)
+            if (question.type == QuestionsType.text)
             {
+                System.Windows.Forms.Label labelQuestion = new System.Windows.Forms.Label();
+                labelQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+                labelQuestion.Location = new Point(50, 30);
+                labelQuestion.Name = "question";
+                labelQuestion.Size = new Size(panel.Width - 100, 170);
+                labelQuestion.Font = new Font("Arial", 22);
+                labelQuestion.ForeColor = Color.White;
+                labelQuestion.TabIndex = 0;
+                labelQuestion.Text = question.question;
+                panel.Controls.Add(labelQuestion);
                 RichTextBox textBox = new RichTextBox();
                 textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
                 textBox.Location = new Point(50, panel.Height - 150);
                 textBox.Name = "textBox";
                 textBox.Size = new Size(panel.Width - 200, 100);
                 textBox.TabIndex = 1;
+                textBox.Font = new Font("Arial", 22);
 
                 Button button = new Button();
                 button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -223,8 +228,18 @@ namespace SGame.Forms
                 panel.Controls.Add(textBox);
                 panel.Controls.Add(button);
             }
-            else
+            else if (question.type == QuestionsType.selection)
             {
+                System.Windows.Forms.Label labelQuestion = new System.Windows.Forms.Label();
+                labelQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+                labelQuestion.Location = new Point(50, 30);
+                labelQuestion.Name = "question";
+                labelQuestion.Size = new Size(panel.Width - 100, 170);
+                labelQuestion.Font = new Font("Arial", 22);
+                labelQuestion.ForeColor = Color.White;
+                labelQuestion.TabIndex = 0;
+                labelQuestion.Text = question.question;
+                panel.Controls.Add(labelQuestion);
                 int numberOfVariant = 0;
                 foreach (var variant in question.getVariantsAnswer())
                 {
@@ -253,7 +268,128 @@ namespace SGame.Forms
                     numberOfVariant++;
                 }
             }
-            StartTimer(10, progressBar1);
+            else if (question.type == QuestionsType.photo)
+            {
+                time = 20;
+                System.Windows.Forms.Label label = new System.Windows.Forms.Label();
+                label.Name = "Theme1";
+                label.Location = new Point(10, 10);
+                label.Size = new Size(panel.Width/4, panel.Height - 170);
+                label.Font = new Font("Arial", 22);
+                label.ForeColor = Color.White;
+                label.Text = "Как зовут этого экономиста?";
+                label.TabIndex = 3;
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+                pictureBox.Location = new Point(10, 15);
+                pictureBox.Size = new Size(panel.Width, panel.Height - 170);
+                pictureBox.Name = "question";
+                
+
+
+                pictureBox.TabIndex = 2;
+
+                pictureBox.Image = Image.FromFile(question.question);
+
+                panel.Controls.Add(label);
+                panel.Controls.Add(pictureBox);
+                
+                RichTextBox textBox = new RichTextBox();
+                textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+                textBox.Location = new Point(50, panel.Height - 150);
+                textBox.Name = "textBox";
+                textBox.Text = "Имя + Фамилия";
+                textBox.Size = new Size(panel.Width - 200, 100);
+                textBox.TabIndex = 1;
+                textBox.Font = new Font("Arial", 22);
+                textBox.Click += (sender, e) =>
+                {
+                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
+                };
+
+                Button button = new Button();
+                button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+                button.Location = new Point(panel.Width - 150, panel.Height - 150);
+                button.Name = "button";
+                button.Size = new Size(100, 100);
+                button.TabIndex = 2;
+                button.Text = "Отправить";
+                button.UseVisualStyleBackColor = true;
+                button.Click += (sender, e) =>
+                {
+                    is_question = true;
+                    if (Distance(textBox.Text.ToLower(), textBox.Text.Length, question.answer.ToLower(), question.answer.Length) < Math.Max(Math.Max(textBox.Text.Length, question.answer.Length) / 2, 0))
+                    {
+                        SendHost("+ " + question.price);
+                        cancellationTokenSource?.Cancel();
+                    }
+                    else SendHost("- " + question.price);
+
+                };
+
+                panel.Controls.Add(textBox);
+                panel.Controls.Add(button);
+            }
+            else if (question.type == QuestionsType.audio)
+            {
+                time = 20;
+                System.Windows.Forms.Label label = new System.Windows.Forms.Label();
+                label.Name = "Theme1";
+                label.Location = new Point(10, 10);
+                label.Size = new Size(panel.Width / 4, panel.Height - 170);
+                label.Font = new Font("Arial", 22);
+                label.ForeColor = Color.White;
+                label.Text = "Кто произносит эту речь?";
+                label.TabIndex = 3;
+
+                
+                player.SoundLocation = question.question;
+                player.Play();
+
+                RichTextBox textBox = new RichTextBox();
+                textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+                textBox.Location = new Point(50, panel.Height - 150);
+                textBox.Name = "textBox";
+                textBox.Text = "Имя + Фамилия";
+                textBox.Size = new Size(panel.Width - 200, 100);
+                textBox.TabIndex = 1;
+                textBox.Font = new Font("Arial", 22);
+                textBox.Click += (sender, e) =>
+                {
+                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
+                };
+                Button button = new Button();
+                button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+                button.Location = new Point(panel.Width - 150, panel.Height - 150);
+                button.Name = "button";
+                button.Size = new Size(100, 100);
+                button.TabIndex = 2;
+                button.Text = "Отправить";
+                button.UseVisualStyleBackColor = true;
+                button.Click += (sender, e) =>
+                {
+                    is_question = true;
+                    if (Distance(textBox.Text.ToLower(), textBox.Text.Length, question.answer.ToLower(), question.answer.Length) < Math.Max(Math.Max(textBox.Text.Length, question.answer.Length) / 2, 0))
+                    {
+                        
+                        SendHost("+ " + question.price);
+                        cancellationTokenSource?.Cancel();
+                    }
+                    else SendHost("- " + question.price);
+                };
+                panel.Controls.Add(label);
+                panel.Controls.Add(textBox);
+                panel.Controls.Add(button);
+            }
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = time;
+            progressBar1.Value = 0;
+            progressBar1.ForeColor = Color.Red;
+            progressBar1.Size = new Size(panel.Width, 30);
+            progressBar1.Location = new Point(0, panel.Height - 30);
+            StartTimer(time, progressBar1);
         }
 
         #region Windows Form Designer generated code
@@ -280,7 +416,7 @@ namespace SGame.Forms
             // panelUsers
             // 
             panelUsers.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelUsers.BackColor = SystemColors.AppWorkspace;
+            panelUsers.BackColor = SystemColors.MenuBar;
             panelUsers.Location = new Point(0, 602);
             panelUsers.Name = "panelUsers";
             panelUsers.Size = new Size(1200, 198);
@@ -297,11 +433,11 @@ namespace SGame.Forms
             FormBorderStyle = FormBorderStyle.None;
             Name = "GameForm";
             Text = "Game";
-            Resize += GameForm_Resize1;
+            Resize += GameForm_Resize;
             ResumeLayout(false);
         }
 
-        private void GameForm_Resize1(object sender, EventArgs e)
+        private void GameForm_Resize(object sender, EventArgs e)
         {
             if (!is_question)
             {

@@ -24,7 +24,6 @@ public partial class EndForm : Form
 
     private int comp(ConnectedUser x, ConnectedUser y)
     {
-        if (x.User?.Scores > y.User?.Scores) return 1;
-        else return 0;
+        return (y.User.Scores - x.User.Scores);
     }
 }

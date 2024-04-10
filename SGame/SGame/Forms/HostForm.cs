@@ -409,6 +409,7 @@ namespace SGame.Forms
             }
             await Task.Delay(500);
             Random random = new Random();
+            if (connectedUsers.Count <= 0) return;
             connectedUsers[random.Next(connectedUsers.Count)].isOtv = true;
             BroadcastMessage(connectedUsers);
 
