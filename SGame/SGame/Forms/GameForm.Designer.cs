@@ -275,9 +275,9 @@ namespace SGame.Forms
                 label.Name = "Theme1";
                 label.Location = new Point(10, 10);
                 label.Size = new Size(panel.Width/4, panel.Height - 170);
-                label.Font = new Font("Arial", 22);
+                label.Font = new Font("Arial", 16);
                 label.ForeColor = Color.White;
-                label.Text = "Как зовут этого экономиста?";
+                label.Text = question.question;
                 label.TabIndex = 3;
 
                 PictureBox pictureBox = new PictureBox();
@@ -291,7 +291,7 @@ namespace SGame.Forms
 
                 pictureBox.TabIndex = 2;
 
-                pictureBox.Image = Image.FromFile(question.question);
+                pictureBox.Image = Image.FromFile(question.link);
 
                 panel.Controls.Add(label);
                 panel.Controls.Add(pictureBox);
