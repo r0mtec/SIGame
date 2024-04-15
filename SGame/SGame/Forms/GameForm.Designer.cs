@@ -100,14 +100,16 @@ namespace SGame.Forms
                 label.Font = new Font("Arial", 26);
                 panel.Controls.Add(label);
 
+
                 int numberOfQuestion = 0;
                 foreach (var question in theme.questionClasses)
                 {
+                    
                     Button button = new Button();
                     button.Name = "Button" + numberOfTheme.ToString() + numberOfQuestion.ToString();
                     button.Location = new Point(300 + numberOfQuestion * (width - 300) / theme.questionClasses.Count, numberOfTheme * height / round.themeClasses.Count);
                     button.Size = new Size((width - 300) / theme.questionClasses.Count, height / round.themeClasses.Count);
-                    button.Text = question.price.ToString();
+                    if (!question.isUsed) button.Text = question.price.ToString();
                     button.BackColor = Color.LightBlue;
                     button.Padding = new Padding(6);
                     button.Font = new Font("Arial", 18);
@@ -115,7 +117,16 @@ namespace SGame.Forms
                     button.Click += (sender, e) =>
                     {
                         SendHost(question);
-                        
+                    };
+                    if (!question.isUsed)
+                    {
+                        button.MouseEnter += (sender, e) => {
+                            button.Cursor = Cursors.Hand;
+                        };
+
+                    }
+                    button.MouseLeave += (sender, e) => {
+                        button.Cursor = Cursors.Default;
                     };
 
                     panel.Controls.Add(button);
@@ -138,7 +149,7 @@ namespace SGame.Forms
                 label.Text = connectedUsers[i].User.Name + "\n" + connectedUsers[i].User.Scores;
                 if(connectedUsers[i].isOtv)
                 {
-                    label.BackColor = Color.Red;
+                    label.BackColor = Color.FromArgb(240, 170, 170);
                 }
                 else
                 {
@@ -416,7 +427,7 @@ namespace SGame.Forms
             // panel
             // 
             panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel.BackColor = Color.FromArgb(40, 86, 182);
+            panel.BackColor = Color.FromArgb(100, 130, 210);
             panel.Location = new Point(0, 0);
             panel.Name = "panel";
             panel.Size = new Size(1200, 604);
