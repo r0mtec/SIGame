@@ -182,9 +182,8 @@ namespace SGame.Forms
             
             ColorProgressBar.ColorProgressBar progressBar1 = new ColorProgressBar.ColorProgressBar();
 
-            int time = 10;
+            int time = 20;
             is_question = true;
-
 
 
             panel.Controls.Add(progressBar1);
@@ -288,7 +287,7 @@ namespace SGame.Forms
             }
             else if (question.type == QuestionsType.photo)
             {
-                time = 20;
+                time = 30;
                 System.Windows.Forms.Label label = new System.Windows.Forms.Label();
                 label.Name = "Theme1";
                 label.Location = new Point(10, 10);
@@ -301,8 +300,8 @@ namespace SGame.Forms
                 PictureBox pictureBox = new PictureBox();
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-                pictureBox.Location = new Point(10, 15);
-                pictureBox.Size = new Size(panel.Width, panel.Height - 170);
+                pictureBox.Location = new Point(panel.Width / 4 + 10, 15);
+                pictureBox.Size = new Size(panel.Width/2, panel.Height - 170);
                 pictureBox.Name = "question";
                 
 
