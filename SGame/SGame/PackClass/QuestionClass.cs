@@ -107,7 +107,6 @@ namespace SGame.PackClass
                     while (!buf.Contains("QUESTION PHOTO END"))
                     {
                         question += buf;
-                        question += "\r\n";
                         buf = new string(fileStream.ReadLine());
                         temp = "";
                         for (int i = 0; i < buf.Length; i++)

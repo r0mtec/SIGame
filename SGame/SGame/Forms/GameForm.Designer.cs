@@ -93,7 +93,7 @@ namespace SGame.Forms
                 System.Windows.Forms.Label label = new System.Windows.Forms.Label();
                 label.Name = "Theme" + numberOfTheme.ToString();
                 label.Location = new Point(0, numberOfTheme * height / round.themeClasses.Count);
-                label.Size = new Size(300, height / round.themeClasses.Count);
+                label.Size = new Size(300, height / round.themeClasses.Count + 1);
                 label.Text = theme.themeName;
                 label.BackColor = Color.Coral;
                 label.Padding = new Padding(6);
@@ -197,7 +197,19 @@ namespace SGame.Forms
                 labelQuestion.Font = new Font("Arial", 22);
                 labelQuestion.ForeColor = Color.White;
                 labelQuestion.TabIndex = 0;
-                labelQuestion.Text = question.question;
+                string temp = "";
+                while (question.question[0] != ':')
+                {
+                    temp += question.question[0];
+                    question.question = question.question.Remove(0, 1);
+                    if (question.question.Length == 0) break;
+                }
+                if (question.question.Length == 0)
+                {
+                    temp += question.question[0];
+                    question.question = question.question.Remove(0, 1);
+                }
+                labelQuestion.Text = temp + Environment.NewLine + question.question;
                 panel.Controls.Add(labelQuestion);
                 RichTextBox textBox = new RichTextBox();
                 textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -205,7 +217,7 @@ namespace SGame.Forms
                 textBox.Name = "textBox";
                 textBox.Size = new Size(panel.Width - 200, 100);
                 textBox.TabIndex = 1;
-                textBox.Font = new Font("Arial", 22);
+                textBox.Font = new Font("Arial", 26);
 
                 Button button = new Button();
                 button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
