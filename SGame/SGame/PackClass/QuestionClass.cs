@@ -118,7 +118,6 @@ namespace SGame.PackClass
                 {
                     if(count == 0) 
                     {
-                        type = QuestionsType.text;
                         answer = buf;
                         count++;
                     }
