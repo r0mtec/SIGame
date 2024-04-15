@@ -255,7 +255,14 @@ namespace SGame.Forms
                     button.Click += (sender, e) =>
                     {
                         button.Enabled = false;
-
+                        foreach (Control control in panel.Controls)
+                        {
+                            if (control is Button)
+                            {
+                                Button button = (Button)control;
+                                button.Enabled = false;
+                            }
+                        }
                         if (variant == question.answer)
                         {
                             SendHost("+ " + question.price);
@@ -320,6 +327,7 @@ namespace SGame.Forms
                 button.Click += (sender, e) =>
                 {
                     is_question = true;
+                    button.Enabled = false;
                     if (Distance(textBox.Text.ToLower(), textBox.Text.Length, question.answer.ToLower(), question.answer.Length) < Math.Max(Math.Max(textBox.Text.Length, question.answer.Length) / 2, 0))
                     {
                         SendHost("+ " + question.price);
@@ -370,6 +378,7 @@ namespace SGame.Forms
                 button.UseVisualStyleBackColor = true;
                 button.Click += (sender, e) =>
                 {
+                    button.Enabled = false;
                     is_question = true;
                     if (Distance(textBox.Text.ToLower(), textBox.Text.Length, question.answer.ToLower(), question.answer.Length) < Math.Max(Math.Max(textBox.Text.Length, question.answer.Length) / 2, 0))
                     {
