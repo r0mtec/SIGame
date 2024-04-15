@@ -166,7 +166,7 @@ namespace SGame.Forms
             {
                 foreach (var question1 in theme.questionClasses)
                 {
-                    if (question.question == question1.question)
+                    if (question.question == question1.question && question.price == question1.price)
                     {
                         question1.isUsed = true;
                         break;
