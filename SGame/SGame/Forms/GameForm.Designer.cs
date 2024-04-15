@@ -204,7 +204,7 @@ namespace SGame.Forms
                     question.question = question.question.Remove(0, 1);
                     if (question.question.Length == 0) break;
                 }
-                if (question.question.Length == 0)
+                if (question.question.Length != 0)
                 {
                     temp += question.question[0];
                     question.question = question.question.Remove(0, 1);
