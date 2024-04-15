@@ -47,45 +47,9 @@ namespace SGame.PackClass
                 }
             }
             buf = new string(fileStream.ReadLine());
-            if (buf.Contains("QUESTION PHOTO"))
-            {
-                type = QuestionsType.photo;
-                buf = new string(fileStream.ReadLine());
-                string temp = "";
-                for(int i = 0; i < buf.Length; i++)
-                {
-                    temp += buf[i];
-                    if (temp == "..") break;
-                }
-                if(temp == "..") 
-                {
-                    link = buf;
-                    buf = new string(fileStream.ReadLine());
-                }
-                else 
-                {
-                    while (!buf.Contains("QUESTION PHOTO END"))
-                    {
-                        question += buf;
-                        question += "\r\n";
-                        buf = new string(fileStream.ReadLine());
-                        temp = "";
-                        for (int i = 0; i < buf.Length; i++)
-                        {
-                            temp += buf[i];
-                            if (temp == "..") break;
-                        }
-                        if (temp == "..")
-                        {
-                            link = buf;
-                            buf = new string(fileStream.ReadLine());
-                            break ;
-                        }
-                    }
-                }
-                
-            }
-            else if (buf.Contains("QUESTION PHOTOSELECT"))
+
+
+            if (buf.Contains("QUESTION PHOTOSELECT"))
             {
                 type = QuestionsType.photoSelection;
                 buf = new string(fileStream.ReadLine());
@@ -122,6 +86,44 @@ namespace SGame.PackClass
                     }
                 }
 
+            }
+            else if (buf.Contains("QUESTION PHOTO"))
+            {
+                type = QuestionsType.photo;
+                buf = new string(fileStream.ReadLine());
+                string temp = "";
+                for(int i = 0; i < buf.Length; i++)
+                {
+                    temp += buf[i];
+                    if (temp == "..") break;
+                }
+                if(temp == "..") 
+                {
+                    link = buf;
+                    buf = new string(fileStream.ReadLine());
+                }
+                else 
+                {
+                    while (!buf.Contains("QUESTION PHOTO END"))
+                    {
+                        question += buf;
+                        question += "\r\n";
+                        buf = new string(fileStream.ReadLine());
+                        temp = "";
+                        for (int i = 0; i < buf.Length; i++)
+                        {
+                            temp += buf[i];
+                            if (temp == "..") break;
+                        }
+                        if (temp == "..")
+                        {
+                            link = buf;
+                            buf = new string(fileStream.ReadLine());
+                            break ;
+                        }
+                    }
+                }
+                
             }
             else if (buf.Contains("QUESTION AUDIO"))
             {

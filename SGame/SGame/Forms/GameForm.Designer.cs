@@ -317,13 +317,13 @@ namespace SGame.Forms
                 textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
                 textBox.Location = new Point(50, panel.Height - 150);
                 textBox.Name = "textBox";
-                textBox.Text = "Имя + Фамилия";
+                textBox.Text = "Введите ответ";
                 textBox.Size = new Size(panel.Width - 200, 100);
                 textBox.TabIndex = 1;
                 textBox.Font = new Font("Arial", 22);
                 textBox.Click += (sender, e) =>
                 {
-                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
+                    if (textBox.Text == "Введите ответ") textBox.Text = "";
                 };
 
                 Button button = new Button();
@@ -356,7 +356,7 @@ namespace SGame.Forms
                 System.Windows.Forms.Label label = new System.Windows.Forms.Label();
                 label.Name = "Theme1";
                 label.Location = new Point(10, 10);
-                label.Size = new Size(panel.Width / 4, panel.Height - 170);
+                label.Size = new Size(panel.Width / 4, panel.Height - 300);
                 label.Font = new Font("Arial", 16);
                 label.ForeColor = Color.White;
                 label.Text = question.question;
@@ -366,7 +366,7 @@ namespace SGame.Forms
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
                 pictureBox.Location = new Point(panel.Width / 4 + 10, 15);
-                pictureBox.Size = new Size(panel.Width / 2, panel.Height - 170);
+                pictureBox.Size = new Size(panel.Width / 2, panel.Height - 300);
                 pictureBox.Name = "question";
 
 
@@ -377,21 +377,6 @@ namespace SGame.Forms
 
                 panel.Controls.Add(label);
                 panel.Controls.Add(pictureBox);
-
-                RichTextBox textBox = new RichTextBox();
-                textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-                textBox.Location = new Point(50, panel.Height - 150);
-                textBox.Name = "textBox";
-                textBox.Text = "Имя + Фамилия";
-                textBox.Size = new Size(panel.Width - 200, 100);
-                textBox.TabIndex = 1;
-                textBox.Font = new Font("Arial", 22);
-                textBox.Click += (sender, e) =>
-                {
-                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
-                };
-
-                panel.Controls.Add(textBox);
 
                 int numberOfVariant = 0;
                 foreach (var variant in question.getVariantsAnswer())
@@ -448,13 +433,13 @@ namespace SGame.Forms
                 textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
                 textBox.Location = new Point(50, panel.Height - 150);
                 textBox.Name = "textBox";
-                textBox.Text = "Имя + Фамилия";
+                textBox.Text = "Введите ответ";
                 textBox.Size = new Size(panel.Width - 200, 100);
                 textBox.TabIndex = 1;
                 textBox.Font = new Font("Arial", 22);
                 textBox.Click += (sender, e) =>
                 {
-                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
+                    if (textBox.Text == "Введите ответ") textBox.Text = "";
                 };
                 Button button = new Button();
                 button.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
