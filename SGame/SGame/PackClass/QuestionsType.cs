@@ -11,5 +11,6 @@ public enum QuestionsType
     text,
     selection,
     photo,
-    audio
+    audio,
+    photoSelection
 }

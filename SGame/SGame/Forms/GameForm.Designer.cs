@@ -350,6 +350,84 @@ namespace SGame.Forms
                 panel.Controls.Add(textBox);
                 panel.Controls.Add(button);
             }
+            else if (question.type == QuestionsType.photoSelection)
+            {
+                time = 30;
+                System.Windows.Forms.Label label = new System.Windows.Forms.Label();
+                label.Name = "Theme1";
+                label.Location = new Point(10, 10);
+                label.Size = new Size(panel.Width / 4, panel.Height - 170);
+                label.Font = new Font("Arial", 16);
+                label.ForeColor = Color.White;
+                label.Text = question.question;
+                label.TabIndex = 3;
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+                pictureBox.Location = new Point(panel.Width / 4 + 10, 15);
+                pictureBox.Size = new Size(panel.Width / 2, panel.Height - 170);
+                pictureBox.Name = "question";
+
+
+
+                pictureBox.TabIndex = 2;
+
+                pictureBox.Image = Image.FromFile(question.link);
+
+                panel.Controls.Add(label);
+                panel.Controls.Add(pictureBox);
+
+                RichTextBox textBox = new RichTextBox();
+                textBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+                textBox.Location = new Point(50, panel.Height - 150);
+                textBox.Name = "textBox";
+                textBox.Text = "Имя + Фамилия";
+                textBox.Size = new Size(panel.Width - 200, 100);
+                textBox.TabIndex = 1;
+                textBox.Font = new Font("Arial", 22);
+                textBox.Click += (sender, e) =>
+                {
+                    if (textBox.Text == "Имя + Фамилия") textBox.Text = "";
+                };
+
+                panel.Controls.Add(textBox);
+
+                int numberOfVariant = 0;
+                foreach (var variant in question.getVariantsAnswer())
+                {
+                    Button button = new Button();
+                    button.Name = "Button" + numberOfVariant.ToString();
+                    button.Location = new Point(50 + numberOfVariant * (panel.Width - 100) / question.getVariantsAnswer().Count,
+                        panel.Height - 250);
+                    button.Size = new Size((panel.Width - 100) / question.getVariantsAnswer().Count, 200);
+                    button.Text = variant;
+                    button.BackColor = Color.LightBlue;
+                    button.Padding = new Padding(6);
+                    button.Font = new Font("Arial", 18);
+                    button.Click += (sender, e) =>
+                    {
+                        button.Enabled = false;
+                        foreach (Control control in panel.Controls)
+                        {
+                            if (control is Button)
+                            {
+                                Button button = (Button)control;
+                                button.Enabled = false;
+                            }
+                        }
+                        if (variant == question.answer)
+                        {
+                            SendHost("+ " + question.price);
+                            cancellationTokenSource?.Cancel();
+                        }
+                        else SendHost("- " + question.price);
+                    };
+
+                    panel.Controls.Add(button);
+                    numberOfVariant++;
+                }
+            }
             else if (question.type == QuestionsType.audio)
             {
                 time = 20;
