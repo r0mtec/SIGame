@@ -104,7 +104,11 @@ namespace SGame.Forms
                 int numberOfQuestion = 0;
                 foreach (var question in theme.questionClasses)
                 {
-                    
+                    if (question.isUsed)
+                    {
+                        numberOfQuestion++;
+                        continue;
+                    }
                     Button button = new Button();
                     button.Name = "Button" + numberOfTheme.ToString() + numberOfQuestion.ToString();
                     button.Location = new Point(300 + numberOfQuestion * (width - 300) / theme.questionClasses.Count, numberOfTheme * height / round.themeClasses.Count);
@@ -194,7 +198,7 @@ namespace SGame.Forms
                 labelQuestion.Location = new Point(50, 30);
                 labelQuestion.Name = "question";
                 labelQuestion.Size = new Size(panel.Width - 100, 170);
-                labelQuestion.Font = new Font("Arial", 22);
+                labelQuestion.Font = new Font("Arial", 26);
                 labelQuestion.ForeColor = Color.White;
                 labelQuestion.TabIndex = 0;
                 string temp = "";
