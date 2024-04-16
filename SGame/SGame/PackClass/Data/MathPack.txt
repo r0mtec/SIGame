@@ -219,7 +219,7 @@ ___ называется множество всех точек на плоск�
 200
 ?? QUESTION PHOTOSELECT ??
 Решитe задачу:
-..\..\..\PackClass\Data\Photo\priner2.png
+..\..\..\PackClass\Data\Photo\primer2.png
 ?? QUESTION PHOTOSELECT END ??
 ?? ANSWER ??
 e^(sinx)*cosx

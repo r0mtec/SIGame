@@ -373,7 +373,7 @@ namespace SGame.Forms
                 label.Name = "Theme1";
                 label.Location = new Point(10, 10);
                 label.Size = new Size(panel.Width / 4, panel.Height - 300);
-                label.Font = new Font("Arial", 16);
+                label.Font = new Font("Arial", 26);
                 label.ForeColor = Color.White;
                 label.Text = question.question;
                 label.TabIndex = 3;
